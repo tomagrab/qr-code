@@ -21,6 +21,12 @@ const config = {
       colors: {
         velblue: '#3097b9',
         vellightblue: '#40b5db',
+        velgreen: '#40bf89',
+        vellightgreen: '#4dd69c',
+        velorange: '#f3a64b',
+        vellightorange: '#faae55',
+        velred: '#fd5a4b',
+        vellightred: '#ff6e63',
         border: 'hsl(var(--border))',
         input: 'hsl(var(--input))',
         ring: 'hsl(var(--ring))',

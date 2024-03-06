@@ -92,7 +92,7 @@ export default function ChangeQRCodeLinkForm({
           disabled={loading}
           className={`
           ${loading ? 'cursor-not-allowed' : 'cursor-pointer'}
-          ${duplicateLinkMessage ? 'bg-yellow-500 hover:bg-yellow-400' : 'bg-velblue text-white hover:bg-vellightblue'}
+          ${duplicateLinkMessage ? 'bg-velorange hover:bg-vellightorange' : 'bg-velblue text-white hover:bg-vellightblue'}
         `}
         >
           {duplicateLinkMessage
