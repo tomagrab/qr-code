@@ -19,8 +19,8 @@ const config = {
     },
     extend: {
       colors: {
-        velblue: 'hsl(204, 100%, 50%)',
-        vellightblue: 'hsl(204, 100%, 70%)',
+        velblue: '#3097b9',
+        vellightblue: '#40b5db',
         border: 'hsl(var(--border))',
         input: 'hsl(var(--input))',
         ring: 'hsl(var(--ring))',
