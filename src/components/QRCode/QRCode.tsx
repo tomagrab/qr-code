@@ -36,7 +36,15 @@ export default function QRCode() {
           className="h-60 w-60"
         />
         {/* Adjust the Button's onClick to call `handlePrint` */}
-        <Button onClick={handlePrint}>Print</Button>
+        <Button
+          onClick={handlePrint}
+          className={`
+          bg-velblue
+          hover:bg-vellightblue
+        `}
+        >
+          Print
+        </Button>
       </DialogContent>
     </Dialog>
   );

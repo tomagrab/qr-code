@@ -33,12 +33,15 @@ export const EmbededYouTubeVideo = ({ videoUrl }: EmbededYouTubeVideoProps) => {
     >
       <iframe
         className={`
+        h-56
+        w-full
         rounded-lg
         border
         border-gray-900
+        md:h-[13.5rem]
+        md:w-96
+
       `}
-        width="560"
-        height="315"
         src={embedUrl}
         title="YouTube video player"
         allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
