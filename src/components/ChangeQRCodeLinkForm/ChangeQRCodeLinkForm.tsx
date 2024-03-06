@@ -2,7 +2,7 @@
 
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useForm } from 'react-hook-form';
-import { z } from 'zod';
+import { set, z } from 'zod';
 import {
   Form,
   FormControl,
@@ -18,6 +18,7 @@ import { ChangeYouTubeLinkFormSchema } from '@/lib/schemas/ChangeYouTubeLinkForm
 import { ChangeYouTubeLink } from '@/actions/ChangeYouTubeLink/ChangeYouTubeLink';
 import { useState } from 'react';
 import { QRCodes } from '../../../db/schema';
+import { updateQRCode } from '@/data/drizzle';
 
 type ChangeQRCodeLinkFormProps = {
   qrCodes: QRCodes;
@@ -28,10 +29,13 @@ export default function ChangeQRCodeLinkForm({
 }: ChangeQRCodeLinkFormProps) {
   const [loading, setLoading] = useState(false);
   const [duplicateLinkMessage, setDuplicateLinkMessage] = useState('');
+  const [qrCodeURL, setQRCodeURL] = useState(
+    qrCodes.length > 0 ? qrCodes[0].url : '',
+  );
   const form = useForm<z.infer<typeof ChangeYouTubeLinkFormSchema>>({
     resolver: zodResolver(ChangeYouTubeLinkFormSchema),
     defaultValues: {
-      qrCodeURL: 'https://www.youtube.com/watch?v=Fyvit9gG8Yo',
+      qrCodeURL: qrCodeURL || '',
     },
   });
 
@@ -45,10 +49,12 @@ export default function ChangeQRCodeLinkForm({
   ) => {
     setLoading(true);
     setDuplicateLinkMessage('');
+    setQRCodeURL(values.qrCodeURL);
 
     if (checkIfYouTubeLinkExists(values.qrCodeURL)) {
       setLoading(false);
       setDuplicateLinkMessage('This is the current QR code link');
+      const updatedQRCode = await updateQRCode(values.qrCodeURL);
       form.reset();
       return;
     }
@@ -57,7 +63,6 @@ export default function ChangeQRCodeLinkForm({
 
     if (newQRCode !== null) {
       console.log('Success');
-      console.log(newQRCode);
     } else {
       console.log('Error');
     }
