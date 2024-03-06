@@ -77,7 +77,12 @@ export default function ChangeQRCodeLinkForm({
           control={form.control}
           name="qrCodeURL"
           render={({ field }) => (
-            <FormItem>
+            <FormItem
+              className={`
+                flex
+                flex-col
+                items-center`}
+            >
               <FormLabel>YouTube Video Link</FormLabel>
               <FormControl>
                 <Input placeholder="YouTube video link..." {...field} />
