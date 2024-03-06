@@ -20,9 +20,6 @@ export async function ChangeYouTubeLink(
       if (!newQRCode) {
         throw new Error('Error creating QR code');
       }
-
-      revalidatePath('/');
-      revalidatePath('/api');
     }
 
     if (currentQRCode) {

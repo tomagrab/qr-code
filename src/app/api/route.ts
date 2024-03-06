@@ -1,7 +1,9 @@
 import { getCurrentQRCodeURL } from '@/data/drizzle';
 import { redirect } from 'next/navigation';
 
-export async function GET() {
+export const dynamic = 'force-dynamic'; // defaults to auto
+
+export async function GET(request: Request) {
   console.log('GET /api/route.ts');
   const youtubeVideoUrl: string | null = await getCurrentQRCodeURL();
 
