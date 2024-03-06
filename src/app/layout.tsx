@@ -2,6 +2,7 @@ import { ClerkProvider, SignIn, SignedIn, SignedOut } from '@clerk/nextjs';
 import type { Metadata } from 'next';
 import { Inter } from 'next/font/google';
 import './globals.scss';
+import { Analytics } from '@vercel/analytics/react';
 
 const inter = Inter({ subsets: ['latin'] });
 
@@ -34,6 +35,7 @@ export default function RootLayout({
               <SignIn />
             </SignedOut>
           </div>
+          <Analytics />
         </body>
       </html>
     </ClerkProvider>
