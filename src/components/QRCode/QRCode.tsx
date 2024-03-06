@@ -19,7 +19,7 @@ export default function QRCode() {
   return (
     <Dialog>
       <DialogTrigger>
-        <QRCodeSVG value="https://qr-code-seven-mauve.vercel.app/api" />
+        <QRCodeSVG value="https://www.velocitor-qr-code.com/api" />
       </DialogTrigger>
       {/* Add the `printable-content` class to your DialogContent */}
       <DialogContent className="printable-content flex flex-col items-center">
