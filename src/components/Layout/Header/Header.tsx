@@ -16,7 +16,7 @@ export default function Header() {
             text-white
         `}
       >
-        QR Code Updater
+        Velocitor Solutions
       </h1>
     </header>
   );
