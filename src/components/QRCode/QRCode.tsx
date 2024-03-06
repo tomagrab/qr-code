@@ -31,7 +31,10 @@ export default function QRCode() {
             Scan to open the most recent VEDR installation video
           </DialogDescription>
         </DialogHeader>
-        <QRCodeSVG value="https://qr-code-seven-mauve.vercel.app/api" />
+        <QRCodeSVG
+          value="https://qr-code-seven-mauve.vercel.app/api"
+          className="h-60 w-60"
+        />
         {/* Adjust the Button's onClick to call `handlePrint` */}
         <Button onClick={handlePrint}>Print</Button>
       </DialogContent>
