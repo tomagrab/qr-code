@@ -1,14 +1,8 @@
 import { Pool } from '@neondatabase/serverless';
 import { drizzle } from 'drizzle-orm/neon-serverless';
-import {
-  NewQRCode,
-  QRCode,
-  QRCodeURL,
-  QRCodeURLs,
-  QRCodes,
-  qrCode,
-} from '../db/schema';
 import { desc, eq } from 'drizzle-orm';
+import { QRCode, QRCodeURL, QRCodes } from '@/lib/Types/DBTypes/DBTypes';
+import { qrCode } from '@/db/schema';
 
 const pool = new Pool({ connectionString: process.env.DATABASE_URL });
 const db = drizzle(pool);
