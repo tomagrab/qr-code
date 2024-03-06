@@ -1,5 +1,3 @@
-import { QRCodeURL } from "../../../db/schema";
-
 type EmbededYouTubeVideoProps = {
   videoUrl: string;
 };
@@ -26,12 +24,25 @@ export const EmbededYouTubeVideo = ({ videoUrl }: EmbededYouTubeVideoProps) => {
   const embedUrl = convertToEmbedURL(videoUrl);
 
   return (
-    <iframe
-      width="560"
-      height="315"
-      src={embedUrl}
-      title="YouTube video player"
-      allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-    ></iframe>
+    <div
+      className={`
+      rounded-lg
+      bg-gray-900
+      shadow-md
+    `}
+    >
+      <iframe
+        className={`
+        rounded-lg
+        border
+        border-gray-900
+      `}
+        width="560"
+        height="315"
+        src={embedUrl}
+        title="YouTube video player"
+        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+      ></iframe>
+    </div>
   );
 };
