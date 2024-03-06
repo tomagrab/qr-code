@@ -1,15 +1,16 @@
 import ChangeQRCodeLinkForm from '@/components/ChangeQRCodeLinkForm/ChangeQRCodeLinkForm';
-import { EmbededYouTubeVideo } from '@/components/EmbededYouTubeVideo/EmbededYouTubeVideo';
 import Header from '@/components/Layout/Header/Header';
 import QRCode from '@/components/QRCode/QRCode';
 import { getCurrentQRCodeURL, getQRCodes } from '@/data/drizzle';
 import { currentUser } from '@clerk/nextjs/server';
+import EmbeddedYouTubeVideo from '@/components/EmbededYouTubeVideo/EmbeddedYouTubeVideo';
 
 export default async function Home() {
   const videoUrl = await getCurrentQRCodeURL();
   const qrCodes = await getQRCodes();
   const user = await currentUser();
   const userEmail = user?.emailAddresses[0]?.emailAddress;
+
   return (
     <main
       className={`
@@ -36,7 +37,7 @@ export default async function Home() {
           pt-0
         `}
       >
-        {videoUrl ? <EmbededYouTubeVideo videoUrl={videoUrl} /> : null}
+        {videoUrl ? <EmbeddedYouTubeVideo videoUrl={videoUrl} /> : null}
         <div
           className={`
           flex
