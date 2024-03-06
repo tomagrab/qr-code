@@ -54,18 +54,12 @@ export default function ChangeQRCodeLinkForm({
     if (checkIfYouTubeLinkExists(values.qrCodeURL)) {
       setLoading(false);
       setDuplicateLinkMessage('This is the current QR code link');
-      const updatedQRCode = await updateQRCode(qrCodes[0].id, values.qrCodeURL);
+      await ChangeYouTubeLink(values);
       form.reset();
       return;
     }
 
-    const newQRCode = await ChangeYouTubeLink(values);
-
-    if (newQRCode !== null) {
-      console.log('Success');
-    } else {
-      console.log('Error');
-    }
+    await ChangeYouTubeLink(values);
 
     form.reset();
     setLoading(false);
