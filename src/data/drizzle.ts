@@ -57,6 +57,7 @@ export const getMostRecentQRCode = async () => {
 };
 
 export const getCurrentQRCodeURL = async () => {
+  console.log('getCurrentQRCodeURL called');
   try {
     const currentQRCodes: QRCodes | null = await getQRCodes();
 
@@ -64,6 +65,7 @@ export const getCurrentQRCodeURL = async () => {
       return null;
     }
 
+    console.log('currentQRCodes', currentQRCodes[0].url);
     const currentQRCodeURL = currentQRCodes[0].url;
     return currentQRCodeURL;
   } catch (error) {
