@@ -2,23 +2,21 @@
 
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useForm } from 'react-hook-form';
-import { set, z } from 'zod';
+import { z } from 'zod';
 import {
   Form,
   FormControl,
-  FormDescription,
   FormField,
   FormItem,
   FormLabel,
   FormMessage,
-} from '../ui/form';
-import { Button } from '../ui/button';
-import { Input } from '../ui/input';
+} from '@/components/ui/form';
+import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
 import { ChangeYouTubeLinkFormSchema } from '@/lib/schemas/ChangeYouTubeLinkFormSchema/ChangeYouTubeLinkFormSchema';
 import { ChangeYouTubeLink } from '@/actions/ChangeYouTubeLink/ChangeYouTubeLink';
 import { useState } from 'react';
-import { QRCodes } from '../../../db/schema';
-import { updateQRCode } from '@/data/drizzle';
+import { QRCodes } from '@/lib/Types/DBTypes/DBTypes';
 
 type ChangeQRCodeLinkFormProps = {
   qrCodes: QRCodes;
@@ -94,7 +92,7 @@ export default function ChangeQRCodeLinkForm({
           disabled={loading}
           className={`
           ${loading ? 'cursor-not-allowed' : 'cursor-pointer'}
-          ${duplicateLinkMessage ? 'bg-yellow-500 hover:bg-yellow-400' : 'bg-velblue hover:bg-vellightblue text-white'}
+          ${duplicateLinkMessage ? 'bg-yellow-500 hover:bg-yellow-400' : 'bg-velblue text-white hover:bg-vellightblue'}
         `}
         >
           {duplicateLinkMessage

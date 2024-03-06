@@ -7,7 +7,7 @@ import {
   QRCodeURLs,
   QRCodes,
   qrCode,
-} from '../../db/schema';
+} from '../db/schema';
 import { desc, eq } from 'drizzle-orm';
 
 const pool = new Pool({ connectionString: process.env.DATABASE_URL });

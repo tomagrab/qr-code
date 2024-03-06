@@ -1,6 +1,5 @@
 import { sql } from 'drizzle-orm';
 import {
-  date,
   pgTable,
   serial,
   timestamp,
@@ -21,9 +20,3 @@ export const qrCode = pgTable(
     };
   },
 );
-
-export type QRCode = typeof qrCode.$inferSelect;
-export type QRCodes = Array<QRCode>;
-export type NewQRCode = typeof qrCode.$inferInsert;
-export type QRCodeURL = Pick<QRCode, 'url'>;
-export type QRCodeURLs = Array<QRCodeURL>;
