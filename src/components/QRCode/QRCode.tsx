@@ -23,18 +23,20 @@ export default function QRCode() {
       </DialogTrigger>
       {/* Add the `printable-content` class to your DialogContent */}
       <DialogContent className="printable-content flex flex-col items-center">
-        <DialogHeader className="flex flex-col items-center">
-          <DialogTitle>
-            <h2 className="text-2xl font-bold">Scan QR Code</h2>
-          </DialogTitle>
-          <DialogDescription>
-            Scan to open the most recent VEDR installation video
-          </DialogDescription>
-        </DialogHeader>
-        <QRCodeSVG
-          value="https://qr-code-seven-mauve.vercel.app/api"
-          className="h-60 w-60"
-        />
+        <div className="printable-section flex flex-col items-center gap-4">
+          <DialogHeader className="flex flex-col items-center">
+            <DialogTitle>
+              <span className="text-2xl font-bold">Scan QR Code</span>
+            </DialogTitle>
+            <DialogDescription>
+              Scan to open the most recent VEDR installation video
+            </DialogDescription>
+          </DialogHeader>
+          <QRCodeSVG
+            value="https://www.velocitor-qr-code.com/api"
+            className="h-60 w-60"
+          />
+        </div>
         {/* Adjust the Button's onClick to call `handlePrint` */}
         <Button
           onClick={handlePrint}

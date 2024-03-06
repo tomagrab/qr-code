@@ -80,13 +80,13 @@
     @apply invisible;
   }
 
-  /* Then, make the dialog content visible */
-  .printable-content *:not(.printable-content > button) {
+  /* Target the specific section and its direct children */
+  .printable-section * {
     @apply visible;
   }
 
-  /* Optional: Adjust the dialog's position to print from the top of the page */
-  .printable-content {
-    @apply flex min-h-screen flex-col items-center justify-center;
+  /* Hide the print button */
+  .printable-content > button {
+    @apply invisible;
   }
 }
