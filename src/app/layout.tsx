@@ -1,3 +1,4 @@
+import { ClerkProvider, SignIn, SignedIn, SignedOut } from '@clerk/nextjs';
 import type { Metadata } from 'next';
 import { Inter } from 'next/font/google';
 import './globals.scss';
@@ -15,21 +16,26 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en">
-      <body className={inter.className}>
-        <div
-          className={`
+    <ClerkProvider>
+      <html lang="en">
+        <body className={inter.className}>
+          <div
+            className={`
             flex
             min-h-screen
             flex-col
             items-center
             justify-center
             bg-gray-50
-          `}
-        >
-          {children}
-        </div>
-      </body>
-    </html>
+            `}
+          >
+            <SignedIn>{children}</SignedIn>
+            <SignedOut>
+              <SignIn />
+            </SignedOut>
+          </div>
+        </body>
+      </html>
+    </ClerkProvider>
   );
 }
