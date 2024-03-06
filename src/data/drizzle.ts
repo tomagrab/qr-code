@@ -41,7 +41,7 @@ export const getCurrentQRCodeURL = async () => {
       return null;
     }
 
-    const currentQRCodeURL: QRCodeURL = currentQRCodes[0];
+    const currentQRCodeURL = currentQRCodes[0].url;
     return currentQRCodeURL;
   } catch (error) {
     console.error(error);

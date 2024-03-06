@@ -1,11 +1,11 @@
 import { QRCodeURL } from "../../../db/schema";
 
 type EmbededYouTubeVideoProps = {
-  videoUrl: QRCodeURL;
+  videoUrl: string;
 };
 
 export const EmbededYouTubeVideo = ({ videoUrl }: EmbededYouTubeVideoProps) => {
-  if (!videoUrl.url) {
+  if (!videoUrl) {
     return null;
   }
 
@@ -23,7 +23,7 @@ export const EmbededYouTubeVideo = ({ videoUrl }: EmbededYouTubeVideoProps) => {
     }
   };
 
-  const embedUrl = convertToEmbedURL(videoUrl.url);
+  const embedUrl = convertToEmbedURL(videoUrl);
 
   return (
     <iframe
