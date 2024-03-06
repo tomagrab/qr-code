@@ -57,6 +57,7 @@ export default function ChangeQRCodeLinkForm({
 
     if (newQRCode !== null) {
       console.log('Success');
+      console.log(newQRCode);
     } else {
       console.log('Error');
     }
