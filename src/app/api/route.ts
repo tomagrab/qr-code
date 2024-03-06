@@ -1,11 +1,11 @@
 import { getCurrentQRCodeURL } from '@/data/drizzle';
 import { redirect } from 'next/navigation';
-import { QRCodeURL } from '../../../db/schema';
-import { revalidatePath } from 'next/cache';
 
 export async function GET() {
+  console.log('GET /api/route.ts');
   const youtubeVideoUrl: string | null = await getCurrentQRCodeURL();
 
+  console.log('youtubeVideoUrl', youtubeVideoUrl);
   if (youtubeVideoUrl === null) {
     return redirect('/');
   }
