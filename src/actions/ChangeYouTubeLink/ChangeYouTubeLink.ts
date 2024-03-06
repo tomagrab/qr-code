@@ -33,5 +33,6 @@ export async function ChangeYouTubeLink(
     }
 
     revalidatePath('/');
+    revalidatePath('/api');
   }
 }
