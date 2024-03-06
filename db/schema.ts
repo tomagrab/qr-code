@@ -1,4 +1,4 @@
-import { sql } from "drizzle-orm";
+import { sql } from 'drizzle-orm';
 import {
   date,
   pgTable,
@@ -6,24 +6,24 @@ import {
   timestamp,
   uniqueIndex,
   varchar,
-} from "drizzle-orm/pg-core";
+} from 'drizzle-orm/pg-core';
 
 export const qrCode = pgTable(
-  "qr_code",
+  'qr_code',
   {
-    id: serial("id").primaryKey(),
-    url: varchar("url", { length: 256 }),
-    createdAt: timestamp("created_at").default(sql`now()`),
+    id: serial('id').primaryKey(),
+    url: varchar('url', { length: 256 }),
+    createdAt: timestamp('created_at').default(sql`now()`),
   },
-  (qrCode) => {
+  qrCode => {
     return {
-      urlIndex: uniqueIndex("url_idx").on(qrCode.url),
+      urlIndex: uniqueIndex('url_idx').on(qrCode.url),
     };
-  }
+  },
 );
 
 export type QRCode = typeof qrCode.$inferSelect;
 export type QRCodes = Array<QRCode>;
 export type NewQRCode = typeof qrCode.$inferInsert;
-export type QRCodeURL = Pick<QRCode, "url">;
+export type QRCodeURL = Pick<QRCode, 'url'>;
 export type QRCodeURLs = Array<QRCodeURL>;

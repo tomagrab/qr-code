@@ -27,6 +27,7 @@ export default function ChangeQRCodeLinkForm({
   qrCodes,
 }: ChangeQRCodeLinkFormProps) {
   const [loading, setLoading] = useState(false);
+  const [duplicateLinkMessage, setDuplicateLinkMessage] = useState('');
   const form = useForm<z.infer<typeof ChangeYouTubeLinkFormSchema>>({
     resolver: zodResolver(ChangeYouTubeLinkFormSchema),
     defaultValues: {
@@ -43,11 +44,12 @@ export default function ChangeQRCodeLinkForm({
     values: z.infer<typeof ChangeYouTubeLinkFormSchema>,
   ) => {
     setLoading(true);
+    setDuplicateLinkMessage('');
 
     if (checkIfYouTubeLinkExists(values.qrCodeURL)) {
-      console.log('YouTube link already exists');
-      form.reset();
       setLoading(false);
+      setDuplicateLinkMessage('This is the current QR code link');
+      form.reset();
       return;
     }
 
@@ -68,9 +70,9 @@ export default function ChangeQRCodeLinkForm({
       <form
         onSubmit={form.handleSubmit(onSubmit)}
         className={`
-        flex
-        flex-col
-        gap-4
+          flex
+          flex-col
+          gap-4
         `}
         data-testid="change-qr-code-link-form"
       >
@@ -87,8 +89,19 @@ export default function ChangeQRCodeLinkForm({
             </FormItem>
           )}
         />
-        <Button type="submit" disabled={loading}>
-          {loading ? 'Changing Link...' : 'Change QR Code Link'}
+        <Button
+          type="submit"
+          disabled={loading}
+          className={`
+          ${loading ? 'cursor-not-allowed' : 'cursor-pointer'}
+          ${duplicateLinkMessage ? 'bg-yellow-500 hover:bg-yellow-400' : 'bg-velblue hover:bg-vellightblue text-white'}
+        `}
+        >
+          {duplicateLinkMessage
+            ? duplicateLinkMessage
+            : loading
+              ? 'Loading...'
+              : 'Change QR Code Link'}
         </Button>
       </form>
     </Form>

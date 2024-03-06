@@ -10,16 +10,6 @@ export default async function Home() {
     <main
       className={`
         flex
-        min-h-screen
-        flex-col
-        items-center
-        justify-center
-        bg-gray-50
-    `}
-    >
-      <div
-        className={`
-        flex
         flex-col
         items-center
         justify-center
@@ -30,19 +20,18 @@ export default async function Home() {
         p-4
         shadow-md
       `}
-      >
-        {videoUrl ? <EmbededYouTubeVideo videoUrl={videoUrl} /> : null}
-        <div
-          className={`
+    >
+      {videoUrl ? <EmbededYouTubeVideo videoUrl={videoUrl} /> : null}
+      <div
+        className={`
           flex
           flex-col
           gap-4
           md:flex-row
         `}
-        >
-          <QRCode />
-          {qrCodes ? <ChangeQRCodeLinkForm qrCodes={qrCodes} /> : null}
-        </div>
+      >
+        <QRCode />
+        {qrCodes ? <ChangeQRCodeLinkForm qrCodes={qrCodes} /> : null}
       </div>
     </main>
   );

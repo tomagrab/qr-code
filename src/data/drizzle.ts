@@ -1,7 +1,14 @@
-import { Pool } from "@neondatabase/serverless";
-import { drizzle } from "drizzle-orm/neon-serverless";
-import { NewQRCode, QRCode, QRCodeURL, QRCodes, qrCode } from "../../db/schema";
-import { desc } from "drizzle-orm";
+import { Pool } from '@neondatabase/serverless';
+import { drizzle } from 'drizzle-orm/neon-serverless';
+import {
+  NewQRCode,
+  QRCode,
+  QRCodeURL,
+  QRCodeURLs,
+  QRCodes,
+  qrCode,
+} from '../../db/schema';
+import { desc, eq } from 'drizzle-orm';
 
 const pool = new Pool({ connectionString: process.env.DATABASE_URL });
 const db = drizzle(pool);
@@ -33,6 +40,22 @@ export const getQRCodes = async () => {
   }
 };
 
+export const getMostRecentQRCode = async () => {
+  try {
+    const currentQRCodes: QRCodes | null = await getQRCodes();
+
+    if (!currentQRCodes) {
+      return null;
+    }
+
+    const mostRecentQRCode = currentQRCodes[0];
+    return mostRecentQRCode;
+  } catch (error) {
+    console.error(error);
+    return null;
+  }
+};
+
 export const getCurrentQRCodeURL = async () => {
   try {
     const currentQRCodes: QRCodes | null = await getQRCodes();
@@ -43,6 +66,20 @@ export const getCurrentQRCodeURL = async () => {
 
     const currentQRCodeURL = currentQRCodes[0].url;
     return currentQRCodeURL;
+  } catch (error) {
+    console.error(error);
+    return null;
+  }
+};
+
+export const updateQRCode = async (id: number, url: string) => {
+  try {
+    const updatedQRCode = await db
+      .update(qrCode)
+      .set({ url: url })
+      .where(eq(qrCode.id, id));
+
+    return updatedQRCode;
   } catch (error) {
     console.error(error);
     return null;
