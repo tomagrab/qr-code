@@ -34,7 +34,9 @@ export default async function Home() {
         `}
       >
         <QRCode />
-        {qrCodes && userEmail ? (
+        {qrCodes &&
+        (userEmail === process.env.WRITER_EMAIL_1 ||
+          userEmail === process.env.WRITER_EMAIL_2) ? (
           <ChangeQRCodeLinkForm qrCodes={qrCodes} />
         ) : null}
       </div>
