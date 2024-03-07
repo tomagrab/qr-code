@@ -88,10 +88,9 @@ export default function ChangeQRCodeLinkForm({
                 <Input
                   type="url"
                   className={`
-                    ${duplicateLinkMessage ? 'border-velorange ring-2 ring-velorange ring-opacity-50' : 'border-vellink'}
+                    ${duplicateLinkMessage ? 'border-velorange ring-velorange ring-opacity-50' : 'border-vellink'}
                     focus-visible:border-vellink
                     focus-visible:ring-vellink
-                    focus-visible:ring-2
                     focus-visible:ring-opacity-50
                   `}
                   disabled={loading}
