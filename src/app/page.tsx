@@ -4,6 +4,7 @@ import QRCode from '@/components/QRCode/QRCode';
 import { getCurrentQRCodeURL, getQRCodes } from '@/data/drizzle';
 import { currentUser } from '@clerk/nextjs/server';
 import EmbeddedYouTubeVideo from '@/components/EmbededYouTubeVideo/EmbeddedYouTubeVideo';
+import { UserButton } from '@clerk/nextjs';
 
 export default async function Home() {
   const videoUrl = await getCurrentQRCodeURL();
