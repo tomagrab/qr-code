@@ -1,10 +1,5 @@
 'use server';
 
-import {
-  createQRCode,
-  getMostRecentQRCode,
-  updateQRCode,
-} from '@/data/drizzle';
 import { z } from 'zod';
 import { ChangeYouTubeLinkFormSchema } from '@/lib/schemas/ChangeYouTubeLinkFormSchema/ChangeYouTubeLinkFormSchema';
 import { revalidatePath } from 'next/cache';

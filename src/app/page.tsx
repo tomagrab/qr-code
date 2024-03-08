@@ -1,14 +1,11 @@
 import ChangeQRCodeLinkForm from '@/components/ChangeQRCodeLinkForm/ChangeQRCodeLinkForm';
 import Header from '@/components/Layout/Header/Header';
 import QRCode from '@/components/QRCode/QRCode';
-import { getCurrentQRCodeURL, getQRCodes } from '@/data/drizzle';
 import { currentUser } from '@clerk/nextjs/server';
 import EmbeddedYouTubeVideo from '@/components/EmbededYouTubeVideo/EmbeddedYouTubeVideo';
-import { UserButton } from '@clerk/nextjs';
+import PDFUploadForm from '@/components/PDFUploadForm/PDFUploadForm';
 
 export default async function Home() {
-  const videoUrl = await getCurrentQRCodeURL();
-  const qrCodes = await getQRCodes();
   const user = await currentUser();
   const userEmail = user?.emailAddresses[0]?.emailAddress;
 
@@ -54,6 +51,9 @@ export default async function Home() {
             userEmail === process.env.WRITER_EMAIL_2) ? (
             <ChangeQRCodeLinkForm qrCodes={qrCodes} />
           ) : null}
+        </div>
+        <div>
+          <PDFUploadForm />
         </div>
       </div>
     </main>

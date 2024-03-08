@@ -1,0 +1,40 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model qr_code {
+  id          Int       @id @default(autoincrement())
+  youtube_url String?   @unique(map: "youtube_url_idx") @db.VarChar(256)
+  pdf_url     String?   @unique(map: "pdf_url_idx") @db.VarChar(256)
+  author      String?   @db.VarChar(256)
+  created_at  DateTime? @default(now()) @db.Timestamp(6)
+  updated_at  DateTime? @default(now()) @db.Timestamp(6)
+  qr_code_log qr_code_log[]
+  documents      document[]     @relation("QRCodeDocument")
+}
+
+model qr_code_log {
+  id          Int       @id @default(autoincrement())
+  qr_code_id  Int
+  version     Int       @default(autoincrement())
+  youtube_url String?   @db.VarChar(256)
+  pdf_url     String?   @db.VarChar(256)
+  created_at  DateTime  @default(now()) @db.Timestamp(6)
+  updated_at  DateTime  @default(now()) @db.Timestamp(6)
+  qr_code     qr_code   @relation(fields: [qr_code_id], references: [id])
+}
+
+model document {
+  id         Int       @id @default(autoincrement())
+  title      String    @db.VarChar(256)
+  content    String?   @db.Text
+  created_at DateTime  @default(now()) @db.Timestamp(6)
+  updated_at DateTime  @default(now()) @db.Timestamp(6)
+  qr_code_id Int?
+  qr_code    qr_code?  @relation("QRCodeDocument", fields: [qr_code_id], references: [id])
+}
