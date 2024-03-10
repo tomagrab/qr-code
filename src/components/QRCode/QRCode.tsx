@@ -10,7 +10,11 @@ import {
 import { QRCodeSVG } from 'qrcode.react';
 import { Button } from '../ui/button';
 
-export default function QRCode() {
+type QRCodeProps = {
+  value: string;
+};
+
+export default function QRCode({ value }: QRCodeProps) {
   // Function to handle print action
   const handlePrint = () => {
     window.print();
@@ -19,7 +23,7 @@ export default function QRCode() {
   return (
     <Dialog>
       <DialogTrigger>
-        <QRCodeSVG value="https://www.velocitor-qr-code.com/api" />
+        <QRCodeSVG value={value} />
       </DialogTrigger>
       {/* Add the `printable-content` class to your DialogContent */}
       <DialogContent className="printable-content flex flex-col items-center">
@@ -32,10 +36,7 @@ export default function QRCode() {
               Scan to open the most recent VEDR installation video
             </DialogDescription>
           </DialogHeader>
-          <QRCodeSVG
-            value="https://www.velocitor-qr-code.com/api"
-            className="h-60 w-60"
-          />
+          <QRCodeSVG value={value} className="h-60 w-60" />
         </div>
         {/* Adjust the Button's onClick to call `handlePrint` */}
         <Button

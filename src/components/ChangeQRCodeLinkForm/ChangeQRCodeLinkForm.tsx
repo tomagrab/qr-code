@@ -14,12 +14,11 @@ import {
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { ChangeYouTubeLinkFormSchema } from '@/lib/schemas/ChangeYouTubeLinkFormSchema/ChangeYouTubeLinkFormSchema';
-import { ChangeYouTubeLink } from '@/actions/ChangeYouTubeLink/ChangeYouTubeLink';
 import { useState } from 'react';
-import { QRCodes } from '@/lib/Types/DBTypes/DBTypes';
+import { qr_code } from '@prisma/client';
 
 type ChangeQRCodeLinkFormProps = {
-  qrCodes: QRCodes;
+  qrCodes: qr_code[];
 };
 
 export default function ChangeQRCodeLinkForm({
@@ -28,7 +27,7 @@ export default function ChangeQRCodeLinkForm({
   const [loading, setLoading] = useState(false);
   const [duplicateLinkMessage, setDuplicateLinkMessage] = useState('');
   const [qrCodeURL, setQRCodeURL] = useState(
-    qrCodes.length > 0 ? qrCodes[0].url : '',
+    qrCodes.length > 0 ? qrCodes[0].youtube_url : '',
   );
   const form = useForm<z.infer<typeof ChangeYouTubeLinkFormSchema>>({
     resolver: zodResolver(ChangeYouTubeLinkFormSchema),
@@ -38,7 +37,7 @@ export default function ChangeQRCodeLinkForm({
   });
 
   const checkIfYouTubeLinkExists = (url: string) => {
-    const found = qrCodes.find(qrCode => qrCode.url === url);
+    const found = qrCodes.find(qrCode => qrCode.youtube_url === url);
     return found !== undefined;
   };
 
@@ -46,19 +45,7 @@ export default function ChangeQRCodeLinkForm({
     values: z.infer<typeof ChangeYouTubeLinkFormSchema>,
   ) => {
     setLoading(true);
-    setDuplicateLinkMessage('');
-    setQRCodeURL(values.qrCodeURL);
-
-    if (checkIfYouTubeLinkExists(values.qrCodeURL)) {
-      setLoading(false);
-      setDuplicateLinkMessage('This is the current QR code link');
-      form.reset();
-      return;
-    }
-
-    await ChangeYouTubeLink(values);
-
-    form.reset();
+    console.log('values', values);
     setLoading(false);
   };
 

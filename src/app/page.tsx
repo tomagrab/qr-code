@@ -4,10 +4,14 @@ import QRCode from '@/components/QRCode/QRCode';
 import { currentUser } from '@clerk/nextjs/server';
 import EmbeddedYouTubeVideo from '@/components/EmbededYouTubeVideo/EmbeddedYouTubeVideo';
 import PDFUploadForm from '@/components/PDFUploadForm/PDFUploadForm';
+import { readMostRecentQRCode, readQRCodes } from '@/db/prisma';
 
 export default async function Home() {
   const user = await currentUser();
   const userEmail = user?.emailAddresses[0]?.emailAddress;
+  const mostRecentQRCode = await readMostRecentQRCode();
+  const qrCodes = await readQRCodes();
+  const videoUrl = mostRecentQRCode?.youtube_url;
 
   return (
     <main
@@ -45,7 +49,13 @@ export default async function Home() {
           md:flex-row
           `}
         >
-          <QRCode />
+          <QRCode
+            value={
+              mostRecentQRCode?.id
+                ? `https://www.velocitor-qr-code.com/api/YouTubeLink/${mostRecentQRCode.id}`
+                : `https://www.velocitor-qr-code.com/api/YouTubeLink/8`
+            }
+          />
           {qrCodes &&
           (userEmail === process.env.WRITER_EMAIL_1 ||
             userEmail === process.env.WRITER_EMAIL_2) ? (
