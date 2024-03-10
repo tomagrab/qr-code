@@ -8,6 +8,7 @@ export async function GET(request: Request) {
   const lastCharacterOfURL = request.url[request.url.length - 1];
   // Get the QR Code from the database
   const qrCode = await readQRCode(Number(lastCharacterOfURL));
+  console.log(qrCode);
 
   if (!qrCode || !qrCode.youtube_url) {
     // If the QR Code does not exist, redirect to the home page
