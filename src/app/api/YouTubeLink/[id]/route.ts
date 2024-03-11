@@ -6,6 +6,8 @@ export const dynamic = 'force-dynamic';
 export async function GET(request: Request) {
   // Get the ID from the URL
   const lastCharacterOfURL = request.url[request.url.length - 1];
+
+  console.log('lastCharacterOfURL', lastCharacterOfURL);
   // Get the QR Code from the database
   const qrCode = await readQRCode(Number(lastCharacterOfURL));
 

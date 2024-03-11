@@ -146,9 +146,20 @@ export const deleteQRCode = async (id: number) => {
 
 export const createQRCodeLog = async (qr_code_id: number) => {
   try {
+    // Retrieve the latest version number for the given qr_code_id
+    const latestLogEntry = await prisma.qr_code_log.findFirst({
+      where: { qr_code_id },
+      orderBy: { version: 'desc' }, // Order by version in descending order to get the latest
+    });
+
+    // If a log entry exists, increment the version by 1. Otherwise, start with version 1.
+    const newVersionNumber = latestLogEntry ? latestLogEntry.version + 1 : 1;
+
+    // Create a new qr_code_log entry with the incremented version number
     const qr_code_log = await prisma.qr_code_log.create({
       data: {
         qr_code_id,
+        version: newVersionNumber, // Use the new or incremented version number
       },
     });
 
