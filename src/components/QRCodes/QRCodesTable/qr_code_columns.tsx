@@ -44,7 +44,8 @@ export const qr_code_columns: ColumnDef<qr_code>[] = [
     cell: ({ row }) => {
       return row.original.youtube_url ? (
         <QRCodesTableCell>
-          <VideoTitle videoUrl={row.original.youtube_url} />
+          Test
+          {/* <VideoTitle videoUrl={row.original.youtube_url} /> */}
         </QRCodesTableCell>
       ) : null;
     },
@@ -57,7 +58,8 @@ export const qr_code_columns: ColumnDef<qr_code>[] = [
     cell: ({ row }) => {
       return row.original.youtube_url ? (
         <QRCodesTableCell>
-          <EmbeddedYouTubeVideo videoUrl={row.original.youtube_url} />
+          Test
+          {/*  <EmbeddedYouTubeVideo videoUrl={row.original.youtube_url} /> */}
         </QRCodesTableCell>
       ) : null;
     },
