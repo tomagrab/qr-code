@@ -1,9 +1,17 @@
 'use client';
+
+import HeaderNavButton from '@/components/Layout/Header/HeaderNavButtons/HeaderNavButton/HeaderNavButton';
 import { usePathname } from 'next/navigation';
-import HomeButton from './HomeButton/HomeButton';
-import ArchiveButton from './ArchiveButton/ArchiveButton';
 
 export default function HeaderNavButtons() {
   const currentPath = usePathname();
-  return <>{currentPath === '/' ? <ArchiveButton /> : <HomeButton />}</>;
+  return (
+    <>
+      {currentPath === '/' ? (
+        <HeaderNavButton href={`/Archive`} title={`Archive`} />
+      ) : (
+        <HeaderNavButton href={`/`} title={`Home`} />
+      )}
+    </>
+  );
 }
