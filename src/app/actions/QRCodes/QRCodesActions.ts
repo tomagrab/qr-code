@@ -1,6 +1,11 @@
 'use server';
 
-import { createQRCode, readQRCodeByURL, updateQRCode } from '@/db/prisma';
+import {
+  createQRCode,
+  readQRCodeByURL,
+  updateQRCode,
+  deleteQRCode,
+} from '@/db/prisma';
 import { QRCodeFormSchema } from '@/lib/schemas/QRCodeFormSchema/QRCodeFormSchema';
 import { revalidatePath } from 'next/cache';
 import { z } from 'zod';
@@ -87,5 +92,20 @@ export const UpdateQRCode = async (
   return {
     updatedQRCode,
     message: 'QR Code successfully updated.',
+  };
+};
+
+export const DeleteQRCode = async (id: number) => {
+  console.log('DeleteQRCode', id);
+  const deletedQRCode = await deleteQRCode(id);
+  if (!deletedQRCode) {
+    throw new Error('Failed to delete QR code');
+  }
+
+  revalidatePath('/');
+
+  return {
+    deletedQRCode,
+    message: 'QR Code successfully deleted.',
   };
 };

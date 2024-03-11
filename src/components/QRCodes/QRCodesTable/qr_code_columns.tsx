@@ -5,67 +5,117 @@ import { qr_code } from '@prisma/client';
 import { ColumnDef } from '@tanstack/react-table';
 import QRCodeTableActions from '@/components/QRCodes/QRCodesTable/QRCodeTableActions/QRCodeTableActions';
 import { FormatDate } from '@/lib/Utilities/FormatDate/FormatDate';
+import EmbeddedYouTubeVideo from '@/components/EmbededYouTubeVideo/EmbeddedYouTubeVideo';
+import VideoTitle from '@/components/VideoTitle/VideoTitle';
+import QRCodesTableHeader from './QRCodesTableHeader/QRCodesTableHeader';
+import QRCodesTableCell from './QRCodesTableCell/QRCodesTableCell';
 
 export const qr_code_columns: ColumnDef<qr_code>[] = [
   {
     accessorKey: 'id',
-    header: 'ID',
+    header: () => {
+      return <QRCodesTableHeader title="ID" />;
+    },
+    cell: ({ row }) => {
+      return <QRCodesTableCell>{row.original.id}</QRCodesTableCell>;
+    },
   },
   {
     id: 'qr_code_svg',
-    header: 'QR Code',
+    header: () => {
+      return <QRCodesTableHeader title="QR Code" />;
+    },
     accessorKey: 'qr_code_svg',
     cell: ({ row }) => {
       return (
-        <QRCode
-          value={`https://velocitor-qr-code.com/api/YouTubeLink/${row.original.id}`}
-        />
+        <QRCodesTableCell>
+          <QRCode
+            value={`https://velocitor-qr-code.com/api/YouTubeLink/${row.original.id}`}
+          />
+        </QRCodesTableCell>
       );
     },
   },
   {
     accessorKey: 'title',
-    header: 'Title',
+    header: () => {
+      return <QRCodesTableHeader title="Title" />;
+    },
+    cell: ({ row }) => {
+      return row.original.youtube_url ? (
+        <QRCodesTableCell>
+          <VideoTitle videoUrl={row.original.youtube_url} />
+        </QRCodesTableCell>
+      ) : null;
+    },
   },
   {
     accessorKey: 'youtube_url',
-    header: 'YouTube Video',
-  },
-  {
-    accessorKey: 'pdf_url',
-    header: 'PDF URL',
+    header: () => {
+      return <QRCodesTableHeader title="YouTube URL" />;
+    },
+    cell: ({ row }) => {
+      return row.original.youtube_url ? (
+        <QRCodesTableCell>
+          <EmbeddedYouTubeVideo videoUrl={row.original.youtube_url} />
+        </QRCodesTableCell>
+      ) : null;
+    },
   },
   {
     accessorKey: 'author',
-    header: 'Author',
+    header: () => {
+      return <QRCodesTableHeader title="Author" />;
+    },
+    cell: ({ row }) => {
+      return <QRCodesTableCell>{row.original.author}</QRCodesTableCell>;
+    },
   },
   {
     accessorKey: 'created_at',
-    header: 'Created At',
+    header: () => {
+      return <QRCodesTableHeader title="Created At" />;
+    },
     cell: ({ row }) => {
       {
-        return row.original.created_at
-          ? FormatDate(row.original.created_at)
-          : '';
+        return row.original.created_at ? (
+          <QRCodesTableCell>
+            {FormatDate(row.original.created_at)}
+          </QRCodesTableCell>
+        ) : (
+          ''
+        );
       }
     },
   },
   {
     accessorKey: 'updated_at',
-    header: 'Updated At',
+    header: () => {
+      return <QRCodesTableHeader title="Updated At" />;
+    },
     cell: ({ row }) => {
       {
-        return row.original.updated_at
-          ? FormatDate(row.original.updated_at)
-          : '';
+        return row.original.updated_at ? (
+          <QRCodesTableCell>
+            {FormatDate(row.original.updated_at)}
+          </QRCodesTableCell>
+        ) : (
+          ''
+        );
       }
     },
   },
   {
     id: 'actions',
-    header: 'Actions',
+    header: () => {
+      return <QRCodesTableHeader title="Actions" />;
+    },
     cell: ({ row }) => {
-      return <QRCodeTableActions row={row} />;
+      return (
+        <QRCodesTableCell>
+          <QRCodeTableActions row={row} />
+        </QRCodesTableCell>
+      );
     },
   },
 ];

@@ -28,7 +28,7 @@ model qr_code_log {
   pdf_url     String?   @db.VarChar(256)
   created_at  DateTime  @default(now()) @db.Timestamp(6)
   updated_at  DateTime  @default(now()) @db.Timestamp(6)
-  qr_code     qr_code   @relation(fields: [qr_code_id], references: [id])
+  qr_code     qr_code   @relation(fields: [qr_code_id], references: [id], onDelete: Cascade)
 }
 
 model document {

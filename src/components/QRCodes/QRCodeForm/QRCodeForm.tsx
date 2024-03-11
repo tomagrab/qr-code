@@ -19,7 +19,10 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { useForm } from 'react-hook-form';
 import { Textarea } from '@/components/ui/textarea';
 import { useState } from 'react';
-import { CreateQRCode, UpdateQRCode } from '@/app/actions/QRCodes/QRCodes';
+import {
+  CreateQRCode,
+  UpdateQRCode,
+} from '@/app/actions/QRCodes/QRCodesActions';
 
 type QRCodeFormProps = {
   qr_code?: qr_code;

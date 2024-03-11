@@ -1,3 +1,4 @@
+'use server';
 import { YouTubeVideoDetails } from '@/lib/Types/YouTubeVideoTypes/YouTubeVideoTypes';
 
 /**
