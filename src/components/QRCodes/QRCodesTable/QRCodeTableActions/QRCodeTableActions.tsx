@@ -23,6 +23,7 @@ import { qr_code } from '@prisma/client';
 import { useState } from 'react';
 import { DeleteQRCode } from '@/app/actions/QRCodes/QRCodesActions';
 import QRCodesTableDeleteConfirm from '../QRCodesTableDeleteConfirm/QRCodesTableDeleteConfirm';
+import { useUser } from '@clerk/nextjs';
 
 type QRCodeTableActionsProps = {
   row: {
@@ -33,6 +34,9 @@ type QRCodeTableActionsProps = {
 export default function QRCodeTableActions({ row }: QRCodeTableActionsProps) {
   const [isEditDialogOpen, setIsEditDialogOpen] = useState(false);
   const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
+
+  const user = useUser().user;
+  const userEmail = user?.emailAddresses[0].emailAddress;
 
   return (
     <Dialog
@@ -60,43 +64,53 @@ export default function QRCodeTableActions({ row }: QRCodeTableActionsProps) {
             Copy QR Code Information
           </DropdownMenuItem>
           <DropdownMenuSeparator />
-          <DropdownMenuItem onClick={() => setIsEditDialogOpen(true)}>
-            Edit
-          </DropdownMenuItem>
-          <DropdownMenuItem onClick={() => setIsDeleteDialogOpen(true)}>
-            Delete
-          </DropdownMenuItem>
+          {user &&
+          (userEmail === process.env.NEXT_PUBLIC_WRITER_EMAIL_1 ||
+            userEmail === process.env.NEXT_PUBLIC_WRITER_EMAIL_2) ? (
+            <>
+              <DropdownMenuItem onClick={() => setIsEditDialogOpen(true)}>
+                Edit
+              </DropdownMenuItem>
+              <DropdownMenuItem onClick={() => setIsDeleteDialogOpen(true)}>
+                Delete
+              </DropdownMenuItem>
+            </>
+          ) : null}
         </DropdownMenuContent>
       </DropdownMenu>
-      <DialogContent>
-        {isEditDialogOpen ? (
-          <>
-            <DialogHeader>
-              <DialogTitle>
-                <span
-                  className={`
+      {user &&
+      (userEmail === process.env.NEXT_PUBLIC_WRITER_EMAIL_1 ||
+        userEmail === process.env.NEXT_PUBLIC_WRITER_EMAIL_2) ? (
+        <DialogContent>
+          {isEditDialogOpen ? (
+            <>
+              <DialogHeader>
+                <DialogTitle>
+                  <span
+                    className={`
                 text-2xl
                 font-bold
-              `}
-                >
-                  Edit QR Code
-                </span>
-              </DialogTitle>
-              <DialogDescription>
-                This form will allow you to edit the QR code.
-              </DialogDescription>
-            </DialogHeader>
-            <ScrollArea className={``}>
-              <QRCodeForm qr_code={row.original} />
-            </ScrollArea>
-          </>
-        ) : isDeleteDialogOpen ? (
-          <QRCodesTableDeleteConfirm
-            qr_code={row.original}
-            onClick={() => setIsDeleteDialogOpen(false)}
-          />
-        ) : null}
-      </DialogContent>
+                `}
+                  >
+                    Edit QR Code
+                  </span>
+                </DialogTitle>
+                <DialogDescription>
+                  This form will allow you to edit the QR code.
+                </DialogDescription>
+              </DialogHeader>
+              <ScrollArea className={``}>
+                <QRCodeForm qr_code={row.original} />
+              </ScrollArea>
+            </>
+          ) : isDeleteDialogOpen ? (
+            <QRCodesTableDeleteConfirm
+              qr_code={row.original}
+              onClick={() => setIsDeleteDialogOpen(false)}
+            />
+          ) : null}
+        </DialogContent>
+      ) : null}
     </Dialog>
   );
 }
