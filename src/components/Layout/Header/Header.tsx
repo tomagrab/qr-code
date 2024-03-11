@@ -49,7 +49,15 @@ export default function Header() {
         </SignedIn>
         <SignedOut>
           <SignInButton>
-            <Button className="bg-velgreen">Sign in</Button>
+            <Button
+              className={`
+                bg-velgreen
+                text-white
+                hover:bg-vellightgreen
+              `}
+            >
+              Sign in
+            </Button>
           </SignInButton>
         </SignedOut>
       </div>

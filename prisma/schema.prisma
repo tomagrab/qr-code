@@ -10,9 +10,10 @@ datasource db {
 model qr_code {
   id          Int       @id @default(autoincrement())
   title       String    @db.VarChar(256)
+  description String?   @db.Text
   youtube_url String?   @unique(map: "youtube_url_idx") @db.VarChar(256)
   pdf_url     String?   @unique(map: "pdf_url_idx") @db.VarChar(256)
-  author      String?   @db.VarChar(256)
+  author      String   @db.VarChar(256)
   created_at  DateTime? @default(now()) @db.Timestamp(6)
   updated_at  DateTime? @default(now()) @db.Timestamp(6)
   qr_code_log qr_code_log[]

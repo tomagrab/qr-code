@@ -1,13 +1,19 @@
 import { qr_code_columns } from '@/components/QRCodes/QRCodesTable/qr_code_columns';
 import { qr_code } from '@prisma/client';
 import DataTable from '@/components/ui/data-table';
-import CreateQRCodeDialog from '@/components/QRCodes/CreateQRCodeDialog/CreateQRCodeDialog';
+import { currentUser } from '@clerk/nextjs/server';
+import { SignedIn } from '@clerk/nextjs';
+import QRCodeDialog from '@/components/QRCodes/QRCodeDialog/QRCodeDialog';
 
 type QRCodesDisplayProps = {
   qr_codes?: qr_code[] | null;
 };
 
-export default function QRCodesDisplay({ qr_codes }: QRCodesDisplayProps) {
+export default async function QRCodesDisplay({
+  qr_codes,
+}: QRCodesDisplayProps) {
+  const user = await currentUser();
+  const userEmail = user?.emailAddresses[0].emailAddress;
   return (
     <div
       className={`
@@ -33,7 +39,13 @@ export default function QRCodesDisplay({ qr_codes }: QRCodesDisplayProps) {
         >
           QR Codes
         </h2>
-        <CreateQRCodeDialog />
+        <SignedIn>
+          {user &&
+          (userEmail === process.env.WRITER_EMAIL_1 ||
+            userEmail === process.env.WRITER_EMAIL_2) ? (
+            <QRCodeDialog title="Create" subtitle="Create QR Code" />
+          ) : null}
+        </SignedIn>
       </div>
       {qr_codes && qr_codes.length > 0 ? (
         <DataTable columns={qr_code_columns} data={qr_codes} />

@@ -1,4 +1,5 @@
 import { QRCodeFormSchema } from '@/lib/schemas/QRCodeFormSchema/QRCodeFormSchema';
+import { currentUser } from '@clerk/nextjs/server';
 import { PrismaClient } from '@prisma/client';
 import { z } from 'zod';
 
@@ -36,10 +37,22 @@ export const createQRCode = async (
   values: z.infer<typeof QRCodeFormSchema>,
 ) => {
   try {
+    const user = await currentUser();
+
+    if (!user) {
+      throw new Error('User not found');
+    }
+
+    const userFullName = user.firstName + ' ' + user.lastName;
+    const userEmail = user.emailAddresses[0].emailAddress;
+
     const qr_code = await prisma.qr_code.create({
       data: {
+        title: values.title,
+        description: values.description,
         youtube_url: values.youtube_url,
         pdf_url: values.pdf_url,
+        author: userFullName || userEmail,
       },
     });
 
@@ -96,6 +109,23 @@ export const readMostRecentQRCode = async () => {
   }
 };
 
+export const readQRCodeByURL = async (
+  urlType: 'youtube_url' | 'pdf_url',
+  url: string,
+) => {
+  try {
+    const qr_code = await prisma.qr_code.findFirst({
+      where: {
+        [urlType]: url,
+      },
+    });
+    return qr_code;
+  } catch (error) {
+    console.error(error);
+    return null;
+  }
+};
+
 export const updateQRCode = async (
   id: number,
   values: z.infer<typeof QRCodeFormSchema>,
@@ -107,6 +137,8 @@ export const updateQRCode = async (
         id,
       },
       data: {
+        title: values.title,
+        description: values.description,
         youtube_url: values.youtube_url,
         pdf_url: values.pdf_url,
       },
