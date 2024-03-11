@@ -52,12 +52,13 @@ export const qr_code_columns: ColumnDef<qr_code>[] = [
   {
     accessorKey: 'youtube_url',
     header: () => {
-      return <QRCodesTableHeader title="YouTube URL" />;
+      return <QRCodesTableHeader title="Video" />;
     },
     cell: ({ row }) => {
       return row.original.youtube_url ? (
         <QRCodesTableCell>
-          <EmbeddedYouTubeVideo videoUrl={row.original.youtube_url} />
+          Test
+          {/*  <EmbeddedYouTubeVideo videoUrl={row.original.youtube_url} /> */}
         </QRCodesTableCell>
       ) : null;
     },
