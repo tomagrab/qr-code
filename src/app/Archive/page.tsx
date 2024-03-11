@@ -1,9 +1,20 @@
 import { qr_code_columns } from '@/components/QRCodes/QRCodesTable/qr_code_columns';
 import DataTable from '@/components/ui/data-table';
 import { readArchivedQRCodes } from '@/db/prisma';
+import { currentUser } from '@clerk/nextjs/server';
+import { redirect } from 'next/navigation';
 
 export default async function Archive() {
   const archived_qr_codes = await readArchivedQRCodes();
+  const user = await currentUser();
+  const userEmail = user?.emailAddresses[0].emailAddress;
+  const isWriter =
+    userEmail === process.env.NEXT_PUBLIC_WRITER_EMAIL_1 ||
+    userEmail === process.env.NEXT_PUBLIC_WRITER_EMAIL_2;
+
+  if (!user || !isWriter) {
+    redirect('/');
+  }
 
   if (!archived_qr_codes || archived_qr_codes.length === 0) {
     return (
