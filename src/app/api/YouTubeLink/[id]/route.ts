@@ -13,7 +13,7 @@ export async function GET(request: Request) {
 
   if (!qrCode || !qrCode.youtube_url) {
     // If the QR Code does not exist, redirect to the home page
-    return redirect('/');
+    return redirect('https://www.youtube.com/watch?v=vh1I97pXuRw');
   }
 
   // Redirect to the YouTube URL

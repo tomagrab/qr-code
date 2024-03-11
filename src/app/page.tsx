@@ -53,7 +53,7 @@ export default async function Home() {
             value={
               mostRecentQRCode?.id
                 ? `https://www.velocitor-qr-code.com/api/YouTubeLink/${mostRecentQRCode.id}`
-                : `https://www.velocitor-qr-code.com/api/YouTubeLink/8`
+                : `https://www.velocitor-qr-code.com/api/YouTubeLink/1`
             }
           />
           {qrCodes &&
