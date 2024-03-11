@@ -80,8 +80,7 @@ export const qr_code_columns: ColumnDef<qr_code>[] = [
       {
         return row.original.createdAt ? (
           <QRCodesTableCell>
-            Test
-            {/* {FormatDate(row.original.createdAt)} */}
+            {FormatDate(row.original.createdAt)}
           </QRCodesTableCell>
         ) : (
           ''
