@@ -47,7 +47,9 @@ export default async function QRCodesDisplay({
           ) : null}
         </SignedIn>
       </div>
-      {qr_codes && qr_codes.length > 0 ? <>Test</> : null}
+      {qr_codes && qr_codes.length > 0 ? (
+        <DataTable columns={qr_code_columns} data={qr_codes} />
+      ) : null}
     </div>
   );
 }

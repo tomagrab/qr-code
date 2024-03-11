@@ -113,7 +113,8 @@ export const qr_code_columns: ColumnDef<qr_code>[] = [
     cell: ({ row }) => {
       return (
         <QRCodesTableCell>
-          <QRCodeTableActions row={row} />
+          Test
+          {/* <QRCodeTableActions row={row} /> */}
         </QRCodesTableCell>
       );
     },
