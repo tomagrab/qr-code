@@ -8,7 +8,7 @@ import {
   DialogTrigger,
 } from '@/components/ui/dialog';
 import { QRCodeSVG } from 'qrcode.react';
-import { Button } from '../ui/button';
+import { Button } from '../../ui/button';
 
 type QRCodeProps = {
   value: string;

@@ -3,6 +3,7 @@ import type { Metadata } from 'next';
 import { Inter } from 'next/font/google';
 import './globals.scss';
 import { Analytics } from '@vercel/analytics/react';
+import Header from '@/components/Layout/Header/Header';
 
 const inter = Inter({ subsets: ['latin'] });
 
@@ -25,15 +26,11 @@ export default function RootLayout({
             flex
             min-h-screen
             flex-col
-            items-center
-            justify-center
             bg-gray-50
             `}
           >
-            <SignedIn>{children}</SignedIn>
-            <SignedOut>
-              <SignIn />
-            </SignedOut>
+            <Header />
+            {children}
           </div>
           <Analytics />
         </body>

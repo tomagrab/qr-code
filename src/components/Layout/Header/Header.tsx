@@ -1,4 +1,5 @@
-import { UserButton } from '@clerk/nextjs';
+import { Button } from '@/components/ui/button';
+import { SignInButton, SignedIn, SignedOut, UserButton } from '@clerk/nextjs';
 
 export default function Header() {
   return (
@@ -7,7 +8,6 @@ export default function Header() {
         flex
         w-full
         items-center
-        rounded-t-lg
         bg-velblue
         px-4
         py-2
@@ -34,7 +34,7 @@ export default function Header() {
             text-white
         `}
         >
-          Velocitor Solutions
+          Velocitor Solutions QR Code Manager
         </h1>
       </div>
       <div
@@ -44,7 +44,14 @@ export default function Header() {
           justify-end
         `}
       >
-        <UserButton />
+        <SignedIn>
+          <UserButton />
+        </SignedIn>
+        <SignedOut>
+          <SignInButton>
+            <Button className="bg-velgreen">Sign in</Button>
+          </SignInButton>
+        </SignedOut>
       </div>
     </header>
   );
