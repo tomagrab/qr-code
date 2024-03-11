@@ -18,6 +18,11 @@ export const QRCodeFormSchema = z.object({
     })
     .optional(),
 
+  // Field for archived status. Ensures it's a boolean.
+  archived: z
+    .union([z.literal('true'), z.literal('false'), z.boolean()])
+    .transform(value => value === 'true' || value === true),
+
   // Field for optional YouTube URL. Ensures it's a string and a valid URL if provided.
   youtube_url: z.string().url().optional(),
 

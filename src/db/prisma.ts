@@ -50,6 +50,7 @@ export const createQRCode = async (
       data: {
         title: values.title,
         description: values.description,
+        archived: values.archived,
         youtube_url: values.youtube_url,
         pdf_url: values.pdf_url,
         author: userFullName || userEmail,
@@ -85,7 +86,26 @@ export const readQRCode = async (id: number) => {
 
 export const readQRCodes = async () => {
   try {
-    const qr_codes = await prisma.qr_code.findMany();
+    const qr_codes = await prisma.qr_code.findMany({
+      where: {
+        archived: false,
+      },
+    });
+
+    return qr_codes;
+  } catch (error) {
+    console.error(error);
+    return null;
+  }
+};
+
+export const readArchivedQRCodes = async () => {
+  try {
+    const qr_codes = await prisma.qr_code.findMany({
+      where: {
+        archived: true,
+      },
+    });
 
     return qr_codes;
   } catch (error) {
@@ -98,7 +118,7 @@ export const readMostRecentQRCode = async () => {
   try {
     const qr_code = await prisma.qr_code.findFirst({
       orderBy: {
-        created_at: 'desc',
+        createdAt: 'desc',
       },
     });
 
@@ -139,6 +159,7 @@ export const updateQRCode = async (
       data: {
         title: values.title,
         description: values.description,
+        archived: values.archived,
         youtube_url: values.youtube_url,
         pdf_url: values.pdf_url,
       },
@@ -232,7 +253,7 @@ export const readMostRecentQRCodeLog = async () => {
   try {
     const qr_code_log = await prisma.qr_code_log.findFirst({
       orderBy: {
-        created_at: 'desc',
+        createdAt: 'desc',
       },
     });
 

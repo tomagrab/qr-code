@@ -13,17 +13,15 @@ import {
   DialogDescription,
   DialogHeader,
   DialogTitle,
-  DialogTrigger,
 } from '@/components/ui/dialog';
+import QRCodeForm from '@/components/QRCodes/QRCodeForm/QRCodeForm';
+import QRCodesTableDeleteConfirm from '@/components/QRCodes/QRCodesTable/QRCodesTableDeleteConfirm/QRCodesTableDeleteConfirm';
 import { Button } from '@/components/ui/button';
-import { MoreHorizontal } from 'lucide-react';
 import { ScrollArea } from '@/components/ui/scroll-area';
-import QRCodeForm from '../../QRCodeForm/QRCodeForm';
 import { qr_code } from '@prisma/client';
 import { useState } from 'react';
-import { DeleteQRCode } from '@/app/actions/QRCodes/QRCodesActions';
-import QRCodesTableDeleteConfirm from '../QRCodesTableDeleteConfirm/QRCodesTableDeleteConfirm';
 import { useUser } from '@clerk/nextjs';
+import { MoreHorizontal } from 'lucide-react';
 
 type QRCodeTableActionsProps = {
   row: {
@@ -37,6 +35,9 @@ export default function QRCodeTableActions({ row }: QRCodeTableActionsProps) {
 
   const user = useUser().user;
   const userEmail = user?.emailAddresses[0].emailAddress;
+  const isWriter =
+    userEmail === process.env.NEXT_PUBLIC_WRITER_EMAIL_1 ||
+    userEmail === process.env.NEXT_PUBLIC_WRITER_EMAIL_2;
 
   return (
     <Dialog
@@ -64,9 +65,7 @@ export default function QRCodeTableActions({ row }: QRCodeTableActionsProps) {
             Copy QR Code Information
           </DropdownMenuItem>
           <DropdownMenuSeparator />
-          {user &&
-          (userEmail === process.env.NEXT_PUBLIC_WRITER_EMAIL_1 ||
-            userEmail === process.env.NEXT_PUBLIC_WRITER_EMAIL_2) ? (
+          {user && isWriter ? (
             <>
               <DropdownMenuItem onClick={() => setIsEditDialogOpen(true)}>
                 Edit
@@ -78,9 +77,7 @@ export default function QRCodeTableActions({ row }: QRCodeTableActionsProps) {
           ) : null}
         </DropdownMenuContent>
       </DropdownMenu>
-      {user &&
-      (userEmail === process.env.NEXT_PUBLIC_WRITER_EMAIL_1 ||
-        userEmail === process.env.NEXT_PUBLIC_WRITER_EMAIL_2) ? (
+      {user && isWriter ? (
         <DialogContent>
           {isEditDialogOpen ? (
             <>
@@ -100,7 +97,11 @@ export default function QRCodeTableActions({ row }: QRCodeTableActionsProps) {
                 </DialogDescription>
               </DialogHeader>
               <ScrollArea className={``}>
-                <QRCodeForm qr_code={row.original} />
+                <QRCodeForm
+                  qr_code={row.original}
+                  isOpen={isEditDialogOpen}
+                  setIsOpen={setIsEditDialogOpen}
+                />
               </ScrollArea>
             </>
           ) : isDeleteDialogOpen ? (

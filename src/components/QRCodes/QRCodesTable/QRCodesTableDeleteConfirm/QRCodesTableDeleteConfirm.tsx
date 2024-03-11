@@ -1,6 +1,6 @@
 'use client';
 
-import { DeleteQRCode } from '@/app/actions/QRCodes/QRCodesActions';
+import { DeleteQRCode } from '@/actions/QRCodes/QRCodesActions';
 import { Button } from '@/components/ui/button';
 import { qr_code } from '@prisma/client';
 import { SetStateAction } from 'react';

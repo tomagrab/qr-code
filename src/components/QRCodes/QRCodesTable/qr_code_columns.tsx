@@ -72,15 +72,15 @@ export const qr_code_columns: ColumnDef<qr_code>[] = [
     },
   },
   {
-    accessorKey: 'created_at',
+    accessorKey: 'createdAt',
     header: () => {
       return <QRCodesTableHeader title="Created At" />;
     },
     cell: ({ row }) => {
       {
-        return row.original.created_at ? (
+        return row.original.createdAt ? (
           <QRCodesTableCell>
-            {FormatDate(row.original.created_at)}
+            {FormatDate(row.original.createdAt)}
           </QRCodesTableCell>
         ) : (
           ''
@@ -89,15 +89,15 @@ export const qr_code_columns: ColumnDef<qr_code>[] = [
     },
   },
   {
-    accessorKey: 'updated_at',
+    accessorKey: 'updatedAt',
     header: () => {
       return <QRCodesTableHeader title="Updated At" />;
     },
     cell: ({ row }) => {
       {
-        return row.original.updated_at ? (
+        return row.original.updatedAt ? (
           <QRCodesTableCell>
-            {FormatDate(row.original.updated_at)}
+            {FormatDate(row.original.updatedAt)}
           </QRCodesTableCell>
         ) : (
           ''

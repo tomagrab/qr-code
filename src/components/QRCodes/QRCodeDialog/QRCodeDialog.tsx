@@ -1,3 +1,4 @@
+'use client';
 import {
   Dialog,
   DialogContent,
@@ -9,6 +10,7 @@ import {
 import QRCodeForm from '@/components/QRCodes/QRCodeForm/QRCodeForm';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { qr_code } from '@prisma/client';
+import { useState } from 'react';
 
 type CreateQRCodeDialogProps = {
   title: string;
@@ -21,8 +23,9 @@ export default function QRCodeDialog({
   subtitle,
   qr_code,
 }: CreateQRCodeDialogProps) {
+  const [isOpen, setIsOpen] = useState(false);
   return (
-    <Dialog>
+    <Dialog open={isOpen} onOpenChange={setIsOpen}>
       <DialogTrigger
         className={`
           rounded-md
@@ -56,7 +59,7 @@ export default function QRCodeDialog({
           </DialogDescription>
         </DialogHeader>
         <ScrollArea className={``}>
-          <QRCodeForm qr_code={qr_code} />
+          <QRCodeForm qr_code={qr_code} isOpen={isOpen} setIsOpen={setIsOpen} />
         </ScrollArea>
       </DialogContent>
     </Dialog>

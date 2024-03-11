@@ -1,5 +1,6 @@
 import { Button } from '@/components/ui/button';
 import { SignInButton, SignedIn, SignedOut, UserButton } from '@clerk/nextjs';
+import HeaderNavButtons from './HeaderNavButtons/HeaderNavButtons';
 
 export default function Header() {
   return (
@@ -19,7 +20,9 @@ export default function Header() {
           w-1/2
           justify-start
         `}
-      ></div>
+      >
+        <HeaderNavButtons />
+      </div>
       <div
         className={`
             shrink-0

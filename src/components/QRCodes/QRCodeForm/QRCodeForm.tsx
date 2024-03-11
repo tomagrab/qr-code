@@ -13,22 +13,32 @@ import {
 } from '@/components/ui/form';
 import { Input } from '@/components/ui/input';
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '@/components/ui/select';
 import { qr_code } from '@prisma/client';
 import { z } from 'zod';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useForm } from 'react-hook-form';
 import { Textarea } from '@/components/ui/textarea';
-import { useState } from 'react';
-import {
-  CreateQRCode,
-  UpdateQRCode,
-} from '@/app/actions/QRCodes/QRCodesActions';
+import { Dispatch, SetStateAction, useState } from 'react';
+import { CreateQRCode, UpdateQRCode } from '@/actions/QRCodes/QRCodesActions';
 
 type QRCodeFormProps = {
   qr_code?: qr_code;
+  isOpen: boolean;
+  setIsOpen: Dispatch<SetStateAction<boolean>>;
 };
 
-export default function QRCodeForm({ qr_code }: QRCodeFormProps) {
+export default function QRCodeForm({
+  qr_code,
+  isOpen,
+  setIsOpen,
+}: QRCodeFormProps) {
   const [loading, setLoading] = useState(false);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
   const [isUrlInUse, setIsUrlInUse] = useState(false);
@@ -38,6 +48,7 @@ export default function QRCodeForm({ qr_code }: QRCodeFormProps) {
     defaultValues: {
       title: qr_code?.title || '',
       description: qr_code?.description || '',
+      archived: qr_code?.archived || false,
       youtube_url: qr_code?.youtube_url || undefined,
       pdf_url: qr_code?.pdf_url || undefined,
     },
@@ -47,6 +58,17 @@ export default function QRCodeForm({ qr_code }: QRCodeFormProps) {
     setLoading(true);
     setErrorMessage(null);
     setIsUrlInUse(false);
+
+    if (!values) {
+      setErrorMessage('Failed to create QR code');
+      setLoading(false);
+      return;
+    }
+
+    // Convert archived to boolean
+    if (typeof values.archived === 'string') {
+      values.archived = values.archived === 'true';
+    }
 
     let response;
     if (qr_code) {
@@ -65,6 +87,13 @@ export default function QRCodeForm({ qr_code }: QRCodeFormProps) {
     }
 
     setLoading(false);
+
+    if (response && !response.existingQRCode) {
+      form.reset();
+      if (isOpen) {
+        setIsOpen(false);
+      }
+    }
   };
 
   return (
@@ -108,6 +137,31 @@ export default function QRCodeForm({ qr_code }: QRCodeFormProps) {
                 The description of the QR code. Must be at least 3 characters
                 long.
               </FormDescription>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+
+        <FormField
+          control={form.control}
+          name="archived"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>Archived</FormLabel>
+              <Select
+                onValueChange={field.onChange}
+                defaultValue={field.value!.toString()}
+              >
+                <FormControl>
+                  <SelectTrigger>
+                    <SelectValue>{field.value ? 'Yes' : 'No'}</SelectValue>
+                  </SelectTrigger>
+                </FormControl>
+                <SelectContent>
+                  <SelectItem value="true">Yes</SelectItem>
+                  <SelectItem value="false">No</SelectItem>
+                </SelectContent>
+              </Select>
               <FormMessage />
             </FormItem>
           )}
