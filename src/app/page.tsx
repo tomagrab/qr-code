@@ -52,8 +52,8 @@ export default async function Home() {
           <QRCode
             value={
               mostRecentQRCode?.id
-                ? `https://www.velocitor-qr-code.com/api/YouTubeLink/${mostRecentQRCode.id}`
-                : `https://www.velocitor-qr-code.com/api/YouTubeLink/1`
+                ? `https://velocitor-qr-code.com/api/YouTubeLink/${mostRecentQRCode.id}`
+                : `https://velocitor-qr-code.com/api/YouTubeLink/1`
             }
           />
           {qrCodes &&
