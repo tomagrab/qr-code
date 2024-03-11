@@ -37,7 +37,7 @@ export default function Header() {
             text-xl
             font-bold
             text-white
-        `}
+          `}
         >
           Velocitor Solutions QR Code Manager
         </h1>

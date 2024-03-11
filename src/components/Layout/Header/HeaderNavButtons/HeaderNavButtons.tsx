@@ -5,6 +5,5 @@ import ArchiveButton from './ArchiveButton/ArchiveButton';
 
 export default function HeaderNavButtons() {
   const currentPath = usePathname();
-  console.log(typeof currentPath);
   return <>{currentPath === '/' ? <ArchiveButton /> : <HomeButton />}</>;
 }
