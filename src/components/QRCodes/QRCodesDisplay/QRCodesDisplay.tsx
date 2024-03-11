@@ -43,13 +43,11 @@ export default async function QRCodesDisplay({
           {user &&
           (userEmail === process.env.NEXT_PUBLIC_WRITER_EMAIL_1 ||
             userEmail === process.env.NEXT_PUBLIC_WRITER_EMAIL_2) ? (
-            <>Test</>
+            <QRCodeDialog title="Create" subtitle="Create QR Code" />
           ) : null}
         </SignedIn>
       </div>
-      {qr_codes && qr_codes.length > 0 ? (
-        <DataTable columns={qr_code_columns} data={qr_codes} />
-      ) : null}
+      {qr_codes && qr_codes.length > 0 ? <>Test</> : null}
     </div>
   );
 }
