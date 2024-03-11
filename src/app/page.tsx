@@ -14,8 +14,7 @@ export default async function Home() {
         flex-col
       `}
     >
-      {/* <QRCodesDisplay qr_codes={qr_codes} /> */}
-      Test
+      <QRCodesDisplay qr_codes={qr_codes} />
     </main>
   );
 }
