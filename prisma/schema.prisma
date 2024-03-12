@@ -11,6 +11,7 @@ model qr_code {
   id          Int       @id @default(autoincrement())
   title       String    @db.VarChar(256)
   description String?   @db.Text
+  active      Boolean   @default(true)
   archived    Boolean   @default(false)
   youtube_url String?   @unique(map: "youtube_url_idx") @db.VarChar(256)
   pdf_url     String?   @unique(map: "pdf_url_idx") @db.VarChar(256)
