@@ -27,6 +27,7 @@ import { useForm } from 'react-hook-form';
 import { Textarea } from '@/components/ui/textarea';
 import { Dispatch, SetStateAction, useState } from 'react';
 import { CreateQRCode, UpdateQRCode } from '@/actions/QRCodes/QRCodesActions';
+import { Switch } from '@/components/ui/switch';
 
 type QRCodeFormProps = {
   qr_code?: qr_code;
@@ -48,6 +49,7 @@ export default function QRCodeForm({
     defaultValues: {
       title: qr_code?.title || '',
       description: qr_code?.description || '',
+      active: qr_code?.active || true,
       archived: qr_code?.archived || false,
       youtube_url: qr_code?.youtube_url || undefined,
       pdf_url: qr_code?.pdf_url || undefined,
@@ -103,7 +105,7 @@ export default function QRCodeForm({
         className={`
           flex
           flex-col
-          space-y-8
+          gap-4
           p-2
         `}
       >
@@ -116,9 +118,6 @@ export default function QRCodeForm({
               <FormControl>
                 <Input placeholder="QR Code Title..." {...field} />
               </FormControl>
-              <FormDescription>
-                The title of the QR code. Must be at least 3 characters long.
-              </FormDescription>
               <FormMessage />
             </FormItem>
           )}
@@ -133,41 +132,66 @@ export default function QRCodeForm({
               <FormControl>
                 <Textarea placeholder="QR Code Description..." {...field} />
               </FormControl>
-              <FormDescription>
-                The description of the QR code. Must be at least 3 characters
-                long.
-              </FormDescription>
               <FormMessage />
             </FormItem>
           )}
         />
 
-        <FormField
-          control={form.control}
-          name="archived"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Archived</FormLabel>
-              <Select
-                onValueChange={field.onChange}
-                defaultValue={field.value!.toString()}
+        <div
+          className={`
+              flex
+              items-center
+              justify-evenly
+              `}
+        >
+          <FormField
+            control={form.control}
+            name="active"
+            render={({ field }) => (
+              <FormItem
+                className={`
+                  flex
+                  items-center
+                  gap-2
+                  space-y-0
+                `}
               >
+                <FormLabel>Active</FormLabel>
                 <FormControl>
-                  <SelectTrigger>
-                    <SelectValue>
-                      {field.value.toString() === 'true' ? 'Yes' : 'No'}
-                    </SelectValue>
-                  </SelectTrigger>
+                  <Switch
+                    checked={field.value}
+                    onCheckedChange={field.onChange}
+                  />
                 </FormControl>
-                <SelectContent>
-                  <SelectItem value="true">Yes</SelectItem>
-                  <SelectItem value="false">No</SelectItem>
-                </SelectContent>
-              </Select>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+
+          <FormField
+            control={form.control}
+            name="archived"
+            render={({ field }) => (
+              <FormItem
+                className={`
+                  flex
+                  items-center
+                  gap-2
+                  space-y-0
+                `}
+              >
+                <FormLabel>Archived</FormLabel>
+                <FormControl>
+                  <Switch
+                    checked={field.value}
+                    onCheckedChange={field.onChange}
+                  />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+        </div>
 
         <FormField
           control={form.control}
@@ -178,9 +202,6 @@ export default function QRCodeForm({
               <FormControl>
                 <Input placeholder="YouTube URL..." {...field} />
               </FormControl>
-              <FormDescription>
-                The YouTube URL for the QR code. Must be a valid URL.
-              </FormDescription>
               <FormMessage />
             </FormItem>
           )}
@@ -195,9 +216,6 @@ export default function QRCodeForm({
               <FormControl>
                 <Input placeholder="PDF URL..." {...field} />
               </FormControl>
-              <FormDescription>
-                The PDF URL for the QR code. Must be a valid URL.
-              </FormDescription>
               <FormMessage />
             </FormItem>
           )}

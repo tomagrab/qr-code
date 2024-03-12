@@ -18,6 +18,10 @@ export const QRCodeFormSchema = z.object({
     })
     .optional(),
 
+  active: z
+    .union([z.literal('true'), z.literal('false'), z.boolean()])
+    .transform(value => value === 'true' || value === true),
+
   // Field for archived status. Ensures it's a boolean.
   archived: z
     .union([z.literal('true'), z.literal('false'), z.boolean()])
