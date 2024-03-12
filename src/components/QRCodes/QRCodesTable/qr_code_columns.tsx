@@ -9,12 +9,16 @@ import EmbeddedYouTubeVideo from '@/components/EmbededYouTubeVideo/EmbeddedYouTu
 import VideoTitle from '@/components/VideoTitle/VideoTitle';
 import QRCodesTableHeader from './QRCodesTableHeader/QRCodesTableHeader';
 import QRCodesTableCell from './QRCodesTableCell/QRCodesTableCell';
+import { GetYouTubeVideoID } from '@/lib/Utilities/GetYouTubeVideoID/GetYouTubeVideoID';
+import { GetYouTubeVideoDetails } from '@/lib/Utilities/GetYouTubeVideoDetails/GetYouTubeVideoDetails';
 
 export const qr_code_columns: ColumnDef<qr_code>[] = [
   {
     accessorKey: 'id',
-    header: () => {
-      return <QRCodesTableHeader title="ID" />;
+    accessorFn: row => row.id.toString(),
+
+    header: ({ column }) => {
+      return <QRCodesTableHeader column={column} title="ID" />;
     },
     cell: ({ row }) => {
       return <QRCodesTableCell>{row.original.id}</QRCodesTableCell>;
@@ -22,8 +26,8 @@ export const qr_code_columns: ColumnDef<qr_code>[] = [
   },
   {
     id: 'qr_code_svg',
-    header: () => {
-      return <QRCodesTableHeader title="QR Code" />;
+    header: ({ column }) => {
+      return <QRCodesTableHeader column={column} title="QR Code" />;
     },
     accessorKey: 'qr_code_svg',
     cell: ({ row }) => {
@@ -38,8 +42,27 @@ export const qr_code_columns: ColumnDef<qr_code>[] = [
   },
   {
     accessorKey: 'title',
-    header: () => {
-      return <QRCodesTableHeader title="Title" />;
+    accessorFn: async row => {
+      if (!row.youtube_url) {
+        return '';
+      }
+
+      const videoId = GetYouTubeVideoID(row.youtube_url);
+
+      if (!videoId) {
+        return '';
+      }
+
+      const videoDetails = await GetYouTubeVideoDetails(videoId);
+
+      if (!videoDetails) {
+        return '';
+      }
+
+      return videoDetails.items[0].snippet.title;
+    },
+    header: ({ column }) => {
+      return <QRCodesTableHeader column={column} title="Title" />;
     },
     cell: ({ row }) => {
       return row.original.youtube_url ? (
@@ -51,8 +74,8 @@ export const qr_code_columns: ColumnDef<qr_code>[] = [
   },
   {
     accessorKey: 'youtube_url',
-    header: () => {
-      return <QRCodesTableHeader title="Video" />;
+    header: ({ column }) => {
+      return <QRCodesTableHeader column={column} title="Video" />;
     },
     cell: ({ row }) => {
       return row.original.youtube_url ? (
@@ -64,8 +87,8 @@ export const qr_code_columns: ColumnDef<qr_code>[] = [
   },
   {
     accessorKey: 'author',
-    header: () => {
-      return <QRCodesTableHeader title="Author" />;
+    header: ({ column }) => {
+      return <QRCodesTableHeader column={column} title="Author" />;
     },
     cell: ({ row }) => {
       return <QRCodesTableCell>{row.original.author}</QRCodesTableCell>;
@@ -73,8 +96,8 @@ export const qr_code_columns: ColumnDef<qr_code>[] = [
   },
   {
     accessorKey: 'createdAt',
-    header: () => {
-      return <QRCodesTableHeader title="Created At" />;
+    header: ({ column }) => {
+      return <QRCodesTableHeader column={column} title="Created At" />;
     },
     cell: ({ row }) => {
       {
@@ -90,8 +113,8 @@ export const qr_code_columns: ColumnDef<qr_code>[] = [
   },
   {
     accessorKey: 'updatedAt',
-    header: () => {
-      return <QRCodesTableHeader title="Updated At" />;
+    header: ({ column }) => {
+      return <QRCodesTableHeader column={column} title="Updated At" />;
     },
     cell: ({ row }) => {
       {
@@ -109,8 +132,8 @@ export const qr_code_columns: ColumnDef<qr_code>[] = [
   },
   {
     id: 'actions',
-    header: () => {
-      return <QRCodesTableHeader title="Actions" />;
+    header: ({ column }) => {
+      return <QRCodesTableHeader column={column} title="Actions" />;
     },
     cell: ({ row }) => {
       return (
