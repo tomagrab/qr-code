@@ -9,6 +9,7 @@ import QRCodesTableHeader from './QRCodesTableHeader/QRCodesTableHeader';
 import QRCodesTableCell from './QRCodesTableCell/QRCodesTableCell';
 import { Badge } from '@/components/ui/badge';
 import { Checkbox } from '@/components/ui/checkbox';
+import Link from 'next/link';
 
 export const qr_code_columns: ColumnDef<qr_code>[] = [
   {
@@ -42,7 +43,13 @@ export const qr_code_columns: ColumnDef<qr_code>[] = [
       return <QRCodesTableHeader column={column} title="ID" />;
     },
     cell: ({ row }) => {
-      return <QRCodesTableCell>{row.original.id}</QRCodesTableCell>;
+      return (
+        <QRCodesTableCell>
+          <Link href={`/QRCode/${row.original.id}`}>
+            <Badge>{row.original.id}</Badge>
+          </Link>
+        </QRCodesTableCell>
+      );
     },
   },
   {

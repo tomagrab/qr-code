@@ -54,42 +54,44 @@ export default async function QRCodeDetails({
         <QRCodeDetailsHeader
           qr_code_id={qr_code.id}
           qr_code_title={qr_code.title}
+          qr_code_createdAt={qr_code.createdAt}
+          qr_code_updatedAt={qr_code.updatedAt}
         />
-        <div className="flex flex-col gap-4 p-4">
+        <div
+          className={`
+            flex
+            flex-col
+            gap-4
+            p-4
+          `}
+        >
           {qr_code.youtube_url ? (
-            <EmbeddedYouTubeVideo videoUrl={qr_code.youtube_url} />
+            <>
+              {qr_code.youtube_title ? (
+                <h3
+                  className={`
+                    text-center
+                    text-2xl
+                    font-bold
+                  `}
+                >
+                  {qr_code.youtube_title}
+                </h3>
+              ) : null}
+              <EmbeddedYouTubeVideo videoUrl={qr_code.youtube_url} />
+            </>
           ) : null}
-          <QRCodeDetailsDescription isWriter={isWriter} qr_code={qr_code} />
           <div className="flex justify-evenly gap-4">
             <QRCode
               value={`https://velocitor-qr-code.com/api/YouTubeLink/${qr_code.id}`}
             />
-            <div className="flex flex-col justify-evenly">
-              <Badge
-                className={`
-                text-base
-                `}
-              >
-                Author:&nbsp;{qr_code.author}
-              </Badge>
-              <Badge
-                className={`
-          text-base
-          `}
-              >
-                Archived:
-                {qr_code.archived ? (
-                  <span className="font-bold text-red-500">&nbsp;Yes</span>
-                ) : (
-                  <span className="font-bold text-green-500">&nbsp;No</span>
-                )}
-              </Badge>
-            </div>
+            <QRCodeDetailsBody
+              qr_code_author={qr_code.author}
+              qr_code_active={qr_code.active}
+              qr_code_archived={qr_code.archived}
+            />
           </div>
-          <QRCodeDetailsBody
-            qr_code_createdAt={qr_code.createdAt}
-            qr_code_updatedAt={qr_code.updatedAt}
-          />
+          <QRCodeDetailsDescription isWriter={isWriter} qr_code={qr_code} />
         </div>
       </div>
     </main>

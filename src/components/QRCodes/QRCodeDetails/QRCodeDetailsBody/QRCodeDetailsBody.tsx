@@ -1,43 +1,35 @@
+import { FormatDate } from '@/lib/Utilities/FormatDate/FormatDate';
 import { qr_code } from '@prisma/client';
 
 type QRCodeDetailsBodyProps = {
-  qr_code_createdAt: qr_code['createdAt'];
-  qr_code_updatedAt: qr_code['updatedAt'];
+  qr_code_author: qr_code['author'];
+  qr_code_active: qr_code['active'];
+  qr_code_archived: qr_code['archived'];
 };
 
 export default function QRCodeDetailsBody({
-  qr_code_createdAt,
-  qr_code_updatedAt,
+  qr_code_author,
+  qr_code_active,
+  qr_code_archived,
 }: QRCodeDetailsBodyProps) {
   return (
-    <div
-      className={`
-          flex
-          flex-col
-          gap-4
-        `}
-    >
-      <p
-        className={`
-              text-base
-          `}
-      >
-        Created:&nbsp;
-        {qr_code_createdAt.toLocaleString('en-US', {
-          dateStyle: 'full',
-          timeStyle: 'short',
-        })}
+    <div className="flex flex-col justify-evenly">
+      <p>Author:&nbsp;{qr_code_author}</p>
+      <p>
+        Active:&nbsp;
+        {qr_code_active ? (
+          <span className="font-bold text-green-500">&nbsp;Yes</span>
+        ) : (
+          <span className="font-bold text-red-500">&nbsp;No</span>
+        )}
       </p>
-      <p
-        className={`
-              text-base
-          `}
-      >
-        Updated:&nbsp;
-        {qr_code_updatedAt.toLocaleString('en-US', {
-          dateStyle: 'full',
-          timeStyle: 'short',
-        })}
+      <p>
+        Archived:
+        {qr_code_archived ? (
+          <span className="font-bold text-green-500">&nbsp;Yes</span>
+        ) : (
+          <span className="font-bold text-red-500">&nbsp;No</span>
+        )}
       </p>
     </div>
   );
