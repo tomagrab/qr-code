@@ -80,7 +80,7 @@ export const qr_code_columns: ColumnDef<qr_code>[] = [
       {
         return row.original.createdAt ? (
           <QRCodesTableCell>
-            {row.original.createdAt.toLocaleDateString('en-US', {
+            {row.original.createdAt.toLocaleString('en-US', {
               year: 'numeric',
               month: 'long',
               day: 'numeric',
