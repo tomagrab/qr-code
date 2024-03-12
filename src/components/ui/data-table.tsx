@@ -211,7 +211,15 @@ export default function DataTable<TData, TValue>({
                     checked={column.getIsVisible()}
                     onCheckedChange={value => column.toggleVisibility(!!value)}
                   >
-                    {column.id}
+                    {column.id === 'id'
+                      ? 'ID'
+                      : column.id === 'youtube_title'
+                        ? 'Video'
+                        : column.id === 'createdAt'
+                          ? 'Created At'
+                          : column.id === 'updatedAt'
+                            ? 'Updated At'
+                            : column.id}
                   </DropdownMenuCheckboxItem>
                 );
               })}

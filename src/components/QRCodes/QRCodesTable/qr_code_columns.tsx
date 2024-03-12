@@ -38,7 +38,6 @@ export const qr_code_columns: ColumnDef<qr_code>[] = [
   {
     accessorKey: 'id',
     accessorFn: row => row.id.toString(),
-
     header: ({ column }) => {
       return <QRCodesTableHeader column={column} title="ID" />;
     },
