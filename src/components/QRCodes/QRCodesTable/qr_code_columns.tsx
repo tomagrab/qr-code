@@ -5,14 +5,36 @@ import { qr_code } from '@prisma/client';
 import { ColumnDef } from '@tanstack/react-table';
 import QRCodeTableActions from '@/components/QRCodes/QRCodesTable/QRCodeTableActions/QRCodeTableActions';
 import { FormatDate } from '@/lib/Utilities/FormatDate/FormatDate';
-import VideoTitle from '@/components/VideoTitle/VideoTitle';
 import QRCodesTableHeader from './QRCodesTableHeader/QRCodesTableHeader';
 import QRCodesTableCell from './QRCodesTableCell/QRCodesTableCell';
-import { GetYouTubeVideoID } from '@/lib/Utilities/GetYouTubeVideoID/GetYouTubeVideoID';
-import { GetYouTubeVideoDetails } from '@/lib/Utilities/GetYouTubeVideoDetails/GetYouTubeVideoDetails';
 import { Badge } from '@/components/ui/badge';
+import { Checkbox } from '@/components/ui/checkbox';
 
 export const qr_code_columns: ColumnDef<qr_code>[] = [
+  {
+    id: 'select',
+    header: ({ table }) => (
+      <Checkbox
+        checked={
+          table.getIsAllPageRowsSelected() ||
+          (table.getIsSomePageRowsSelected() && 'indeterminate')
+        }
+        onCheckedChange={(value: boolean) =>
+          table.toggleAllPageRowsSelected(!!value)
+        }
+        aria-label="Select all"
+      />
+    ),
+    cell: ({ row }) => (
+      <Checkbox
+        checked={row.getIsSelected()}
+        onCheckedChange={(value: boolean) => row.toggleSelected(!!value)}
+        aria-label="Select row"
+      />
+    ),
+    enableSorting: false,
+    enableHiding: false,
+  },
   {
     accessorKey: 'id',
     accessorFn: row => row.id.toString(),
@@ -46,43 +68,26 @@ export const qr_code_columns: ColumnDef<qr_code>[] = [
       return <QRCodesTableHeader column={column} title="Title" />;
     },
     cell: ({ row }) => {
-      return <QRCodesTableCell>{row.original.title}</QRCodesTableCell>;
+      return (
+        <QRCodesTableCell>
+          <Badge
+            className={`
+              ${'truncate'}
+            `}
+          >
+            {row.original.title}
+          </Badge>
+        </QRCodesTableCell>
+      );
     },
   },
   {
-    accessorKey: 'youtube_url',
+    accessorKey: 'youtube_title',
     header: ({ column }) => {
       return <QRCodesTableHeader column={column} title="Video" />;
     },
-    accessorFn: async row => {
-      if (!row.youtube_url) {
-        return null;
-      }
-
-      const videoId = GetYouTubeVideoID(row.youtube_url);
-
-      if (!videoId) {
-        return null;
-      }
-
-      const videoDetails = await GetYouTubeVideoDetails(videoId);
-
-      if (!videoDetails) {
-        return null;
-      }
-
-      return videoDetails.items[0].snippet.title;
-    },
     cell: ({ row }) => {
-      return row.original.youtube_url ? (
-        <QRCodesTableCell>
-          <VideoTitle videoUrl={row.original.youtube_url} />
-        </QRCodesTableCell>
-      ) : (
-        <QRCodesTableCell>
-          <Badge variant={`destructive`}>No Video</Badge>
-        </QRCodesTableCell>
-      );
+      return <QRCodesTableCell>{row.original.youtube_title}</QRCodesTableCell>;
     },
   },
   {

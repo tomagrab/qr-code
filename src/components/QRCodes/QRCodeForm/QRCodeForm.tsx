@@ -13,13 +13,6 @@ import {
 } from '@/components/ui/form';
 import { Input } from '@/components/ui/input';
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from '@/components/ui/select';
 import { qr_code } from '@prisma/client';
 import { z } from 'zod';
 import { zodResolver } from '@hookform/resolvers/zod';
@@ -44,6 +37,16 @@ export default function QRCodeForm({
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
   const [isUrlInUse, setIsUrlInUse] = useState(false);
 
+  // Set up mechanism for counting characters in the description field
+  const [description, setDescription] = useState('');
+  const [descriptionCount, setDescriptionCount] = useState(0);
+  const handleDescriptionChange = (
+    e: React.ChangeEvent<HTMLTextAreaElement>,
+  ) => {
+    setDescription(e.target.value);
+    setDescriptionCount(e.target.value.length);
+  };
+
   const form = useForm<z.infer<typeof QRCodeFormSchema>>({
     resolver: zodResolver(QRCodeFormSchema),
     defaultValues: {
@@ -51,8 +54,8 @@ export default function QRCodeForm({
       description: qr_code?.description || '',
       active: qr_code?.active || true,
       archived: qr_code?.archived || false,
-      youtube_url: qr_code?.youtube_url || undefined,
-      pdf_url: qr_code?.pdf_url || undefined,
+      youtube_url: qr_code?.youtube_url || 'https://www.velocitor-qr-code.com/',
+      pdf_url: qr_code?.pdf_url || 'https://www.velocitor-qr-code.com/',
     },
   });
 
@@ -109,39 +112,11 @@ export default function QRCodeForm({
           p-2
         `}
       >
-        <FormField
-          control={form.control}
-          name="title"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Title</FormLabel>
-              <FormControl>
-                <Input placeholder="QR Code Title..." {...field} />
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-
-        <FormField
-          control={form.control}
-          name="description"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Description</FormLabel>
-              <FormControl>
-                <Textarea placeholder="QR Code Description..." {...field} />
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-
         <div
           className={`
               flex
               items-center
-              justify-evenly
+              justify-between
               `}
         >
           <FormField
@@ -159,6 +134,7 @@ export default function QRCodeForm({
                 <FormLabel>Active</FormLabel>
                 <FormControl>
                   <Switch
+                    disabled={loading}
                     checked={field.value}
                     onCheckedChange={field.onChange}
                   />
@@ -183,6 +159,7 @@ export default function QRCodeForm({
                 <FormLabel>Archived</FormLabel>
                 <FormControl>
                   <Switch
+                    disabled={loading}
                     checked={field.value}
                     onCheckedChange={field.onChange}
                   />
@@ -195,12 +172,63 @@ export default function QRCodeForm({
 
         <FormField
           control={form.control}
+          name="title"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>Title</FormLabel>
+              <FormControl>
+                <Input
+                  disabled={loading}
+                  placeholder="QR Code Title..."
+                  {...field}
+                />
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+
+        <FormField
+          control={form.control}
+          name="description"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>Description</FormLabel>
+              <FormControl>
+                <Textarea
+                  {...field}
+                  onChange={e => {
+                    field.onChange(e);
+                    handleDescriptionChange(e);
+                  }}
+                  disabled={loading}
+                  placeholder="QR Code Description..."
+                />
+              </FormControl>
+              <FormDescription>
+                {descriptionCount > 500 ? (
+                  <span className="text-red-500">Description too long</span>
+                ) : (
+                  <span>{descriptionCount} / 500 characters</span>
+                )}
+              </FormDescription>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+
+        <FormField
+          control={form.control}
           name="youtube_url"
           render={({ field }) => (
             <FormItem>
               <FormLabel>YouTube URL</FormLabel>
               <FormControl>
-                <Input placeholder="YouTube URL..." {...field} />
+                <Input
+                  disabled={loading}
+                  placeholder="YouTube URL..."
+                  {...field}
+                />
               </FormControl>
               <FormMessage />
             </FormItem>
@@ -214,13 +242,13 @@ export default function QRCodeForm({
             <FormItem>
               <FormLabel>PDF URL</FormLabel>
               <FormControl>
-                <Input placeholder="PDF URL..." {...field} />
+                <Input disabled={loading} placeholder="PDF URL..." {...field} />
               </FormControl>
               <FormMessage />
             </FormItem>
           )}
         />
-        <Button type="submit">
+        <Button disabled={loading} type="submit">
           {qr_code && loading
             ? 'Updating...'
             : qr_code

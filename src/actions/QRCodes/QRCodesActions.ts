@@ -5,7 +5,11 @@ import {
   readQRCodeByURL,
   updateQRCode,
   deleteQRCode,
+  archiveQRCode,
+  toggleArchiveQRCode,
 } from '@/db/prisma';
+import { GetYouTubeVideoDetails } from '@/lib/Utilities/GetYouTubeVideoDetails/GetYouTubeVideoDetails';
+import { GetYouTubeVideoID } from '@/lib/Utilities/GetYouTubeVideoID/GetYouTubeVideoID';
 import { QRCodeFormSchema } from '@/lib/schemas/QRCodeFormSchema/QRCodeFormSchema';
 import { revalidatePath } from 'next/cache';
 import { z } from 'zod';
@@ -37,8 +41,21 @@ export const CreateQRCode = async (
     }
   }
 
+  let youtube_title: string | null = 'No title found';
+
+  // Try to get the YouTube video details if the YouTube URL exists
+  if (values.youtube_url) {
+    const youtubeVideoID = GetYouTubeVideoID(values.youtube_url);
+    if (youtubeVideoID) {
+      const youtubeVideoDetails = await GetYouTubeVideoDetails(youtubeVideoID);
+      if (youtubeVideoDetails) {
+        youtube_title = youtubeVideoDetails.items[0].snippet.title;
+      }
+    }
+  }
+
   // Proceed to create a new QR Code if neither URL exists already
-  const newQRCode = await createQRCode(values);
+  const newQRCode = await createQRCode(values, youtube_title);
   if (!newQRCode) {
     throw new Error('Failed to create QR code');
   }
@@ -80,8 +97,21 @@ export const UpdateQRCode = async (
     }
   }
 
+  let youtube_title: string | null = 'No title found';
+
+  // Try to get the YouTube video details if the YouTube URL exists
+  if (values.youtube_url) {
+    const youtubeVideoID = GetYouTubeVideoID(values.youtube_url);
+    if (youtubeVideoID) {
+      const youtubeVideoDetails = await GetYouTubeVideoDetails(youtubeVideoID);
+      if (youtubeVideoDetails) {
+        youtube_title = youtubeVideoDetails.items[0].snippet.title;
+      }
+    }
+  }
+
   // Proceed to update the QR Code if neither URL exists already
-  const updatedQRCode = await updateQRCode(id, values);
+  const updatedQRCode = await updateQRCode(id, youtube_title, values);
   if (!updatedQRCode) {
     throw new Error('Failed to update QR code');
   }
@@ -107,5 +137,32 @@ export const DeleteQRCode = async (id: number) => {
   return {
     deletedQRCode,
     message: 'QR Code successfully deleted.',
+  };
+};
+
+export const ArchiveQRCode = async (id: number) => {
+  const archivedQRCode = await archiveQRCode(id);
+  if (!archivedQRCode) {
+    throw new Error('Failed to archive QR code');
+  }
+
+  revalidatePath('/');
+
+  return {
+    archivedQRCode,
+    message: 'QR Code successfully archived.',
+  };
+};
+
+export const ToggleArchiveQRCode = async (id: number) => {
+  const toggled_qr_code = await toggleArchiveQRCode(id);
+  if (!toggled_qr_code) {
+    throw new Error('Failed to toggle archive QR code');
+  }
+
+  revalidatePath('/');
+  return {
+    toggled_qr_code,
+    message: 'QR Code successfully toggled.',
   };
 };

@@ -13,8 +13,8 @@ export const QRCodeFormSchema = z.object({
     .min(3, {
       message: 'Description must be at least 3 characters long',
     })
-    .max(1000, {
-      message: 'Description must be at most 1000 characters long',
+    .max(500, {
+      message: 'Description must be at most 500 characters long',
     })
     .optional(),
 

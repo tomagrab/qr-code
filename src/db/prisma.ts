@@ -35,6 +35,7 @@ main()
 
 export const createQRCode = async (
   values: z.infer<typeof QRCodeFormSchema>,
+  youtube_title: string,
 ) => {
   try {
     const user = await currentUser();
@@ -51,6 +52,7 @@ export const createQRCode = async (
         title: values.title,
         description: values.description,
         archived: values.archived,
+        youtube_title: youtube_title,
         youtube_url: values.youtube_url,
         pdf_url: values.pdf_url,
         author: userFullName || userEmail,
@@ -88,7 +90,23 @@ export const readQRCodes = async () => {
   try {
     const qr_codes = await prisma.qr_code.findMany({
       where: {
+        active: true,
         archived: false,
+      },
+    });
+
+    return qr_codes;
+  } catch (error) {
+    console.error(error);
+    return null;
+  }
+};
+
+export const readInactiveQRCodes = async () => {
+  try {
+    const qr_codes = await prisma.qr_code.findMany({
+      where: {
+        active: false,
       },
     });
 
@@ -103,9 +121,21 @@ export const readArchivedQRCodes = async () => {
   try {
     const qr_codes = await prisma.qr_code.findMany({
       where: {
+        active: true,
         archived: true,
       },
     });
+
+    return qr_codes;
+  } catch (error) {
+    console.error(error);
+    return null;
+  }
+};
+
+export const readAllQRCodes = async () => {
+  try {
+    const qr_codes = await prisma.qr_code.findMany();
 
     return qr_codes;
   } catch (error) {
@@ -148,6 +178,7 @@ export const readQRCodeByURL = async (
 
 export const updateQRCode = async (
   id: number,
+  youtube_title: string,
   values: z.infer<typeof QRCodeFormSchema>,
 ) => {
   try {
@@ -160,6 +191,7 @@ export const updateQRCode = async (
         title: values.title,
         description: values.description,
         archived: values.archived,
+        youtube_title: youtube_title,
         youtube_url: values.youtube_url,
         pdf_url: values.pdf_url,
       },
@@ -172,6 +204,50 @@ export const updateQRCode = async (
       qr_code,
       updated_qr_code_log,
     };
+  } catch (error) {
+    console.error(error);
+    return null;
+  }
+};
+
+export const archiveQRCode = async (id: number) => {
+  try {
+    const qr_code = await prisma.qr_code.update({
+      where: {
+        id,
+      },
+      data: {
+        archived: true,
+      },
+    });
+
+    return qr_code;
+  } catch (error) {
+    console.error(error);
+    return null;
+  }
+};
+
+export const toggleArchiveQRCode = async (id: number) => {
+  try {
+    const qr_code = await readQRCode(id);
+
+    if (!qr_code) {
+      throw new Error('QR code not found');
+    }
+
+    const archived = qr_code.archived;
+
+    const toggled_qr_code = await prisma.qr_code.update({
+      where: {
+        id,
+      },
+      data: {
+        archived: !archived,
+      },
+    });
+
+    return toggled_qr_code;
   } catch (error) {
     console.error(error);
     return null;
