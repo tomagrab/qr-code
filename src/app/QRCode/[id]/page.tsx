@@ -64,7 +64,7 @@ export default async function QRCodeDetails({
           <QRCodeDetailsDescription isWriter={isWriter} qr_code={qr_code} />
           <div className="flex justify-evenly gap-4">
             <QRCode
-              value={`http://localhost:3000/api/YouTubeLink/${qr_code.id}`}
+              value={`https://velocitor-qr-code.com/api/YouTubeLink/${qr_code.id}`}
             />
             <div className="flex flex-col justify-evenly">
               <Badge

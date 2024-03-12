@@ -34,7 +34,7 @@ export const qr_code_columns: ColumnDef<qr_code>[] = [
       return (
         <QRCodesTableCell>
           <QRCode
-            value={`http://localhost:3000/api/YouTubeLink/${row.original.id}`}
+            value={`https://velocitor-qr-code.com/api/YouTubeLink/${row.original.id}`}
           />
         </QRCodesTableCell>
       );
