@@ -21,9 +21,7 @@ export default function Header() {
           justify-start
         `}
       >
-        <SignedIn>
-          <HeaderNavButtons />
-        </SignedIn>
+        <HeaderNavButtons />
       </div>
       <div
         className={`
