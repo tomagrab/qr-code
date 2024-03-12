@@ -1,13 +1,12 @@
 import { readQRCode } from '@/db/prisma';
 import { redirect } from 'next/navigation';
-import { NextRequest, NextResponse } from 'next/server';
+import { NextRequest } from 'next/server';
 
 // This is a dynamic route
 export const dynamic = 'force-dynamic';
 
 export async function GET(
   request: NextRequest,
-  response: NextResponse,
   { params }: { params: { id: string } },
 ) {
   // Get the request ID
