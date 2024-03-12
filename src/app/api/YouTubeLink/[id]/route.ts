@@ -5,19 +5,11 @@ import { NextRequest, NextResponse } from 'next/server';
 // This is a dynamic route
 export const dynamic = 'force-dynamic';
 
-type YouTubeLinkRouteParams = {
-  request: NextRequest;
-  response: NextResponse;
-  params: {
-    id: string;
-  };
-};
-
-export async function GET({
-  params,
-  response,
-  request,
-}: YouTubeLinkRouteParams) {
+export async function GET(
+  request: NextRequest,
+  response: NextResponse,
+  { params }: { params: { id: string } },
+) {
   // Get the request ID
   const id = params.id;
 
