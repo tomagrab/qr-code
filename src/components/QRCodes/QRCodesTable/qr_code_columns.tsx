@@ -5,12 +5,12 @@ import { qr_code } from '@prisma/client';
 import { ColumnDef } from '@tanstack/react-table';
 import QRCodeTableActions from '@/components/QRCodes/QRCodesTable/QRCodeTableActions/QRCodeTableActions';
 import { FormatDate } from '@/lib/Utilities/FormatDate/FormatDate';
-import EmbeddedYouTubeVideo from '@/components/EmbededYouTubeVideo/EmbeddedYouTubeVideo';
 import VideoTitle from '@/components/VideoTitle/VideoTitle';
 import QRCodesTableHeader from './QRCodesTableHeader/QRCodesTableHeader';
 import QRCodesTableCell from './QRCodesTableCell/QRCodesTableCell';
 import { GetYouTubeVideoID } from '@/lib/Utilities/GetYouTubeVideoID/GetYouTubeVideoID';
 import { GetYouTubeVideoDetails } from '@/lib/Utilities/GetYouTubeVideoDetails/GetYouTubeVideoDetails';
+import { Badge } from '@/components/ui/badge';
 
 export const qr_code_columns: ColumnDef<qr_code>[] = [
   {
@@ -42,34 +42,11 @@ export const qr_code_columns: ColumnDef<qr_code>[] = [
   },
   {
     accessorKey: 'title',
-    accessorFn: async row => {
-      if (!row.youtube_url) {
-        return '';
-      }
-
-      const videoId = GetYouTubeVideoID(row.youtube_url);
-
-      if (!videoId) {
-        return '';
-      }
-
-      const videoDetails = await GetYouTubeVideoDetails(videoId);
-
-      if (!videoDetails) {
-        return '';
-      }
-
-      return videoDetails.items[0].snippet.title;
-    },
     header: ({ column }) => {
       return <QRCodesTableHeader column={column} title="Title" />;
     },
     cell: ({ row }) => {
-      return row.original.youtube_url ? (
-        <QRCodesTableCell>
-          <VideoTitle videoUrl={row.original.youtube_url} />
-        </QRCodesTableCell>
-      ) : null;
+      return <QRCodesTableCell>{row.original.title}</QRCodesTableCell>;
     },
   },
   {
@@ -77,12 +54,35 @@ export const qr_code_columns: ColumnDef<qr_code>[] = [
     header: ({ column }) => {
       return <QRCodesTableHeader column={column} title="Video" />;
     },
+    accessorFn: async row => {
+      if (!row.youtube_url) {
+        return null;
+      }
+
+      const videoId = GetYouTubeVideoID(row.youtube_url);
+
+      if (!videoId) {
+        return null;
+      }
+
+      const videoDetails = await GetYouTubeVideoDetails(videoId);
+
+      if (!videoDetails) {
+        return null;
+      }
+
+      return videoDetails.items[0].snippet.title;
+    },
     cell: ({ row }) => {
       return row.original.youtube_url ? (
         <QRCodesTableCell>
-          <EmbeddedYouTubeVideo videoUrl={row.original.youtube_url} />
+          <VideoTitle videoUrl={row.original.youtube_url} />
         </QRCodesTableCell>
-      ) : null;
+      ) : (
+        <QRCodesTableCell>
+          <Badge variant={`destructive`}>No Video</Badge>
+        </QRCodesTableCell>
+      );
     },
   },
   {
