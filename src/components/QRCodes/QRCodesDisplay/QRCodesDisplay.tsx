@@ -53,7 +53,28 @@ export default async function QRCodesDisplay({
       </div>
       {qr_codes && qr_codes.length > 0 ? (
         <DataTable columns={qr_code_columns} data={qr_codes} />
-      ) : null}
+      ) : (
+        <div
+          className={`
+            flex
+            flex-row
+            items-center
+            justify-center
+            gap-2
+            px-2
+            py-4
+          `}
+        >
+          <h3
+            className={`
+              text-xl
+              font-bold
+            `}
+          >
+            No QR Codes found
+          </h3>
+        </div>
+      )}
     </div>
   );
 }

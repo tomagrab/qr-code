@@ -23,6 +23,7 @@ import { useState } from 'react';
 import { useUser } from '@clerk/nextjs';
 import { MoreHorizontal } from 'lucide-react';
 import Link from 'next/link';
+import { usePathname } from 'next/navigation';
 
 type QRCodeTableActionsProps = {
   row: {
@@ -33,6 +34,7 @@ type QRCodeTableActionsProps = {
 export default function QRCodeTableActions({ row }: QRCodeTableActionsProps) {
   const [isEditDialogOpen, setIsEditDialogOpen] = useState(false);
   const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
+  const pathname = usePathname();
 
   const user = useUser().user;
   const userEmail = user?.emailAddresses[0].emailAddress;
@@ -78,9 +80,11 @@ export default function QRCodeTableActions({ row }: QRCodeTableActionsProps) {
               <DropdownMenuItem onClick={() => setIsEditDialogOpen(true)}>
                 Edit
               </DropdownMenuItem>
-              <DropdownMenuItem onClick={() => setIsDeleteDialogOpen(true)}>
-                Delete
-              </DropdownMenuItem>
+              {pathname === '/Archive' ? (
+                <DropdownMenuItem onClick={() => setIsDeleteDialogOpen(true)}>
+                  Delete
+                </DropdownMenuItem>
+              ) : null}
             </>
           ) : null}
         </DropdownMenuContent>
