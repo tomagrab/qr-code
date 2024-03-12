@@ -43,7 +43,11 @@ export default async function QRCodesDisplay({
           {user &&
           (userEmail === process.env.NEXT_PUBLIC_WRITER_EMAIL_1 ||
             userEmail === process.env.NEXT_PUBLIC_WRITER_EMAIL_2) ? (
-            <QRCodeDialog title="Create" subtitle="Create QR Code" />
+            <QRCodeDialog
+              title="Create"
+              subtitle="Create QR Code"
+              description="This form will allow you to create a new QR code"
+            />
           ) : null}
         </SignedIn>
       </div>

@@ -15,12 +15,14 @@ import { useState } from 'react';
 type CreateQRCodeDialogProps = {
   title: string;
   subtitle: string;
+  description?: string;
   qr_code?: qr_code;
 };
 
 export default function QRCodeDialog({
   title,
   subtitle,
+  description,
   qr_code,
 }: CreateQRCodeDialogProps) {
   const [isOpen, setIsOpen] = useState(false);
@@ -55,7 +57,15 @@ export default function QRCodeDialog({
             </span>
           </DialogTitle>
           <DialogDescription>
-            This form will allow you to create a new QR code
+            {description ? (
+              <span
+                className={`
+                  text-sm
+                `}
+              >
+                {description}
+              </span>
+            ) : null}
           </DialogDescription>
         </DialogHeader>
         <ScrollArea className={``}>

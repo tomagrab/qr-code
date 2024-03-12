@@ -154,7 +154,9 @@ export default function QRCodeForm({
               >
                 <FormControl>
                   <SelectTrigger>
-                    <SelectValue>{field.value ? 'Yes' : 'No'}</SelectValue>
+                    <SelectValue>
+                      {field.value.toString() === 'true' ? 'Yes' : 'No'}
+                    </SelectValue>
                   </SelectTrigger>
                 </FormControl>
                 <SelectContent>

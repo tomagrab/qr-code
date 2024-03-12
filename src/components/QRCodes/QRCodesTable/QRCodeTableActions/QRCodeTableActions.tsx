@@ -22,6 +22,7 @@ import { qr_code } from '@prisma/client';
 import { useState } from 'react';
 import { useUser } from '@clerk/nextjs';
 import { MoreHorizontal } from 'lucide-react';
+import Link from 'next/link';
 
 type QRCodeTableActionsProps = {
   row: {
@@ -55,10 +56,17 @@ export default function QRCodeTableActions({ row }: QRCodeTableActionsProps) {
         </DropdownMenuTrigger>
         <DropdownMenuContent align="end">
           <DropdownMenuLabel>Actions</DropdownMenuLabel>
+          <DropdownMenuItem>
+            <Link href={`/QRCode/${row.original.id}`}>View QR Code</Link>
+          </DropdownMenuItem>
           <DropdownMenuItem
             onClick={() =>
               navigator.clipboard.writeText(
-                JSON.stringify(row.original, null, 2),
+                `QR Code Information:\n\n${JSON.stringify(
+                  row.original,
+                  null,
+                  2,
+                )}`,
               )
             }
           >
