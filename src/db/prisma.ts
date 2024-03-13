@@ -254,6 +254,50 @@ export const toggleArchiveQRCode = async (id: number) => {
   }
 };
 
+export const inactivateQRCode = async (id: number) => {
+  try {
+    const qr_code = await prisma.qr_code.update({
+      where: {
+        id,
+      },
+      data: {
+        active: false,
+      },
+    });
+
+    return qr_code;
+  } catch (error) {
+    console.error(error);
+    return null;
+  }
+};
+
+export const toggleActiveQRCode = async (id: number) => {
+  try {
+    const qr_code = await readQRCode(id);
+
+    if (!qr_code) {
+      throw new Error('QR code not found');
+    }
+
+    const active = qr_code.active;
+
+    const toggled_qr_code = await prisma.qr_code.update({
+      where: {
+        id,
+      },
+      data: {
+        active: !active,
+      },
+    });
+
+    return toggled_qr_code;
+  } catch (error) {
+    console.error(error);
+    return null;
+  }
+};
+
 export const deleteQRCode = async (id: number) => {
   try {
     const qr_code = await prisma.qr_code.delete({

@@ -1,4 +1,7 @@
+'use client';
+import { Button } from '@/components/ui/button';
 import Link from 'next/link';
+import { usePathname } from 'next/navigation';
 
 type HeaderNavButtonProps = {
   href: string;
@@ -6,20 +9,23 @@ type HeaderNavButtonProps = {
 };
 
 export default function HeaderNavButton({ href, title }: HeaderNavButtonProps) {
+  const currentPath = usePathname();
+  const isActive =
+    currentPath === href || (currentPath.includes(href) && href !== '/');
+
   return (
-    <Link
-      href={href}
-      className={`
-        rounded-md
-        bg-velgreen
-        px-2
-        py-1
+    <Link href={href}>
+      <Button
+        variant={'ghost'}
+        className={`
+        ${isActive ? 'bg-vellink hover:bg-vellightlink' : ' hover:bg-vellink'}
         text-sm
         text-white
-        hover:bg-vellightgreen
+        hover:text-white
       `}
-    >
-      {title}
+      >
+        {title}
+      </Button>
     </Link>
   );
 }

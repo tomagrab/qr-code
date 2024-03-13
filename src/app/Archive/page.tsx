@@ -20,7 +20,26 @@ export default async function Archive() {
     return (
       <main>
         <ArchiveHeader />
-        <p>No QR Codes have been archived!</p>
+        <div
+          className={`
+            flex
+            flex-row
+            items-center
+            justify-center
+            gap-2
+            px-2
+            py-4
+          `}
+        >
+          <h3
+            className={`
+              text-xl
+              font-bold
+            `}
+          >
+            No QR Codes have been archived!
+          </h3>
+        </div>
       </main>
     );
   }
@@ -30,7 +49,28 @@ export default async function Archive() {
       <ArchiveHeader />
       {archived_qr_codes && archived_qr_codes.length > 0 ? (
         <DataTable columns={qr_code_columns} data={archived_qr_codes} />
-      ) : null}
+      ) : (
+        <div
+          className={`
+            flex
+            flex-row
+            items-center
+            justify-center
+            gap-2
+            px-2
+            py-4
+          `}
+        >
+          <h3
+            className={`
+              text-xl
+              font-bold
+            `}
+          >
+            No QR Codes have been archived!
+          </h3>
+        </div>
+      )}
     </main>
   );
 }

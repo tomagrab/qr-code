@@ -7,6 +7,7 @@ import {
   deleteQRCode,
   archiveQRCode,
   toggleArchiveQRCode,
+  toggleActiveQRCode,
 } from '@/db/prisma';
 import { GetYouTubeVideoDetails } from '@/lib/Utilities/GetYouTubeVideoDetails/GetYouTubeVideoDetails';
 import { GetYouTubeVideoID } from '@/lib/Utilities/GetYouTubeVideoID/GetYouTubeVideoID';
@@ -17,27 +18,38 @@ import { z } from 'zod';
 export const CreateQRCode = async (
   values: z.infer<typeof QRCodeFormSchema>,
 ) => {
-  let existingQRCode;
+  // Set up value to store warning messages
+  let warnings = [];
+
+  // Allow specific duplicate URL
+  const allowedDuplicateURL = process.env.ALLOWED_DUPLICATE_URL;
 
   // Check if the QR code YouTube URL already exists
   if (values.youtube_url) {
-    existingQRCode = await readQRCodeByURL('youtube_url', values.youtube_url);
-    if (existingQRCode) {
+    const existingQRCode = await readQRCodeByURL(
+      'youtube_url',
+      values.youtube_url,
+    );
+    if (existingQRCode && values.youtube_url !== allowedDuplicateURL) {
       return {
         existingQRCode,
         message: `This YouTube URL is already in use by QR Code # ${existingQRCode.id}`,
       };
+    } else if (existingQRCode) {
+      warnings.push('This YouTube URL is already in use by another QR Code');
     }
   }
 
   // Check if the QR code PDF URL already exists
   if (values.pdf_url) {
-    existingQRCode = await readQRCodeByURL('pdf_url', values.pdf_url);
-    if (existingQRCode) {
+    const existingQRCode = await readQRCodeByURL('pdf_url', values.pdf_url);
+    if (existingQRCode && values.pdf_url !== allowedDuplicateURL) {
       return {
         existingQRCode,
         message: `This PDF URL is already in use by QR Code # ${existingQRCode.id}`,
       };
+    } else if (existingQRCode) {
+      warnings.push('This PDF URL is already in use by another QR Code');
     }
   }
 
@@ -66,6 +78,7 @@ export const CreateQRCode = async (
   return {
     newQRCode,
     message: 'QR Code successfully created.',
+    warnings,
   };
 };
 
@@ -73,27 +86,38 @@ export const UpdateQRCode = async (
   id: number,
   values: z.infer<typeof QRCodeFormSchema>,
 ) => {
-  let existingQRCode;
+  // Set up value to store warning messages
+  let warnings = [];
+
+  // Allow specific duplicate URL
+  const allowedDuplicateURL = process.env.ALLOWED_DUPLICATE_URL;
 
   // Check if the QR code YouTube URL already exists
   if (values.youtube_url) {
-    existingQRCode = await readQRCodeByURL('youtube_url', values.youtube_url);
-    if (existingQRCode && existingQRCode.id !== id) {
+    const existingQRCode = await readQRCodeByURL(
+      'youtube_url',
+      values.youtube_url,
+    );
+    if (existingQRCode && values.youtube_url !== allowedDuplicateURL) {
       return {
         existingQRCode,
         message: `This YouTube URL is already in use by QR Code # ${existingQRCode.id}`,
       };
+    } else if (existingQRCode) {
+      warnings.push('This YouTube URL is already in use by another QR Code');
     }
   }
 
   // Check if the QR code PDF URL already exists
   if (values.pdf_url) {
-    existingQRCode = await readQRCodeByURL('pdf_url', values.pdf_url);
-    if (existingQRCode && existingQRCode.id !== id) {
+    const existingQRCode = await readQRCodeByURL('pdf_url', values.pdf_url);
+    if (existingQRCode && values.pdf_url !== allowedDuplicateURL) {
       return {
         existingQRCode,
         message: `This PDF URL is already in use by QR Code # ${existingQRCode.id}`,
       };
+    } else if (existingQRCode) {
+      warnings.push('This PDF URL is already in use by another QR Code');
     }
   }
 
@@ -122,6 +146,7 @@ export const UpdateQRCode = async (
   return {
     updatedQRCode,
     message: 'QR Code successfully updated.',
+    warnings,
   };
 };
 
@@ -158,6 +183,19 @@ export const ToggleArchiveQRCode = async (id: number) => {
   const toggled_qr_code = await toggleArchiveQRCode(id);
   if (!toggled_qr_code) {
     throw new Error('Failed to toggle archive QR code');
+  }
+
+  revalidatePath('/');
+  return {
+    toggled_qr_code,
+    message: 'QR Code successfully toggled.',
+  };
+};
+
+export const ToggleActiveQRCode = async (id: number) => {
+  const toggled_qr_code = await toggleActiveQRCode(id);
+  if (!toggled_qr_code) {
+    throw new Error('Failed to toggle active QR code');
   }
 
   revalidatePath('/');

@@ -1,4 +1,5 @@
 import HeaderNavButtons from '@/components/Layout/Header/HeaderNavButtons/HeaderNavButtons';
+import HeaderMobileMenu from '@/components/Layout/Header/HeaderMobileMenu/HeaderMobileMenu';
 import { Button } from '@/components/ui/button';
 import { SignInButton, SignedIn, SignedOut, UserButton } from '@clerk/nextjs';
 
@@ -16,12 +17,23 @@ export default function Header() {
     >
       <div
         className={`
-          flex
+          hidden
           w-1/2
           justify-start
+          md:flex
         `}
       >
         <HeaderNavButtons />
+      </div>
+      <div
+        className={`
+          flex
+          w-1/2
+          justify-start
+          md:hidden
+        `}
+      >
+        <HeaderMobileMenu />
       </div>
       <div
         className={`
@@ -30,14 +42,29 @@ export default function Header() {
       >
         <h1
           className={`
+            hidden
             py-2
             text-center
             text-xl
             font-bold
             text-white
+            md:block
           `}
         >
           Velocitor Solutions QR Code Manager
+        </h1>
+        <h1
+          className={`
+            block
+            py-2
+            text-center
+            text-xl
+            font-bold
+            text-white
+            md:hidden
+          `}
+        >
+          QR Code Manager
         </h1>
       </div>
       <div
