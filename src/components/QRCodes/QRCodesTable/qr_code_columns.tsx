@@ -141,7 +141,7 @@ export const qr_code_columns: ColumnDef<qr_code>[] = [
       }
     },
   },
-  {
+  /*   {
     id: 'actions',
     header: ({ column }) => {
       return <QRCodesTableHeader column={column} title="Actions" />;
@@ -153,5 +153,5 @@ export const qr_code_columns: ColumnDef<qr_code>[] = [
         </QRCodesTableCell>
       );
     },
-  },
+  }, */
 ];
