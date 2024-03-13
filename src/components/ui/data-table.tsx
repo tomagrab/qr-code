@@ -179,7 +179,7 @@ export default function DataTable<TData, TValue>({
             View
           </Button>
         )}
-        {!pathname.includes('/QRCodeLogs') ? (
+        {user && isWriter ? (
           <>
             {table.getFilteredSelectedRowModel().rows.length === 1 ? (
               <>
@@ -248,8 +248,8 @@ export default function DataTable<TData, TValue>({
                 <Link href={`/QRCodeLogs/${selectedRowId}`}>
                   <Button
                     className={`
-                      bg-velyellow
-                      hover:bg-vellightyellow
+                      bg-vellink
+                      hover:bg-vellightlink
                   `}
                   >
                     View Logs
@@ -270,8 +270,8 @@ export default function DataTable<TData, TValue>({
                 <Button
                   disabled
                   className={`
-                  bg-velyellow
-                  hover:bg-vellightyellow
+                  bg-vellink
+                  hover:bg-vellightlink
                   `}
                 >
                   View Logs
@@ -285,8 +285,8 @@ export default function DataTable<TData, TValue>({
           <>
             <Button
               className={`
-                hover:bg-velightorange
                 bg-velorange
+                hover:bg-vellightorange
               `}
               onClick={toggleArchive}
               disabled={!table.getFilteredSelectedRowModel().rows.length}
@@ -326,8 +326,8 @@ export default function DataTable<TData, TValue>({
                         !table.getFilteredSelectedRowModel().rows.length
                       }
                       className={`
-                        hover:bg-velightorange 
-                        bg-velorange
+                        bg-velorange 
+                        hover:bg-vellightorange
                       `}
                     >
                       Deactivate
