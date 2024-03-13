@@ -14,8 +14,8 @@ model qr_code {
   active      Boolean   @default(true)
   archived    Boolean   @default(false)
   youtube_title String? @db.VarChar(256)
-  youtube_url String?   @unique(map: "youtube_url_idx") @db.VarChar(256)
-  pdf_url     String?   @unique(map: "pdf_url_idx") @db.VarChar(256)
+  youtube_url String?   @db.VarChar(256)
+  pdf_url     String?    @db.VarChar(256)
   author      String   @db.VarChar(256)
   createdAt   DateTime  @default(now()) @db.Timestamp(6)
   updatedAt   DateTime  @updatedAt @db.Timestamp(6)
@@ -27,6 +27,11 @@ model qr_code_log {
   id          Int       @id @default(autoincrement())
   qr_code_id  Int
   version     Int       @default(autoincrement())
+  title       String    @db.VarChar(256)
+  description String?   @db.Text
+  active      Boolean   @default(true)
+  archived    Boolean   @default(false)
+  youtube_title String? @db.VarChar(256)
   youtube_url String?   @db.VarChar(256)
   pdf_url     String?   @db.VarChar(256)
   createdAt   DateTime  @default(now()) @db.Timestamp(6)
@@ -36,10 +41,10 @@ model qr_code_log {
 
 model document {
   id         Int       @id @default(autoincrement())
+  qr_code_id Int?
   title      String    @db.VarChar(256)
   content    String?   @db.Text
   createdAt  DateTime  @default(now()) @db.Timestamp(6)
   updatedAt  DateTime  @updatedAt @db.Timestamp(6)
-  qr_code_id Int?
   qr_code    qr_code?  @relation("QRCodeDocument", fields: [qr_code_id], references: [id])
 }

@@ -8,6 +8,7 @@ import {
   archiveQRCode,
   toggleArchiveQRCode,
   toggleActiveQRCode,
+  createQRCodeLog,
 } from '@/db/prisma';
 import { GetYouTubeVideoDetails } from '@/lib/Utilities/GetYouTubeVideoDetails/GetYouTubeVideoDetails';
 import { GetYouTubeVideoID } from '@/lib/Utilities/GetYouTubeVideoID/GetYouTubeVideoID';
@@ -68,8 +69,15 @@ export const CreateQRCode = async (
 
   // Proceed to create a new QR Code if neither URL exists already
   const newQRCode = await createQRCode(values, youtube_title);
+
   if (!newQRCode) {
     throw new Error('Failed to create QR code');
+  }
+
+  const newQRCodeLog = await createQRCodeLog(newQRCode.qr_code.id);
+
+  if (!newQRCodeLog) {
+    throw new Error('Failed to create QR code log');
   }
 
   revalidatePath('/');
@@ -86,6 +94,8 @@ export const UpdateQRCode = async (
   id: number,
   values: z.infer<typeof QRCodeFormSchema>,
 ) => {
+  console.log('UpdateQRCode', id, values);
+
   // Set up value to store warning messages
   let warnings = [];
 

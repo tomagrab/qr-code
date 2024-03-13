@@ -44,12 +44,14 @@ import { useState } from 'react';
 import {
   ArchiveQRCode,
   DeleteQRCode,
+  ToggleActiveQRCode,
   ToggleArchiveQRCode,
   UpdateQRCode,
 } from '@/actions/QRCodes/QRCodesActions';
 import { qr_code } from '@prisma/client';
 import { usePathname } from 'next/navigation';
 import { useUser } from '@clerk/nextjs';
+import Link from 'next/link';
 
 type DataTableProps<TData, TValue> = {
   columns: ColumnDef<TData, TValue>[];
@@ -104,6 +106,21 @@ export default function DataTable<TData, TValue>({
     });
   };
 
+  const toggleActive = () => {
+    const selectedRows = table.getFilteredSelectedRowModel().rows;
+
+    // Iterate through the selected rows and archive them
+    selectedRows.forEach(async row => {
+      const qr_code = row.original as qr_code;
+      if (qr_code) {
+        const toggled_qr_code = await ToggleActiveQRCode(qr_code.id);
+        if (!toggled_qr_code) {
+          throw new Error('Failed to archive QR code');
+        }
+      }
+    });
+  };
+
   const deleteSelected = () => {
     const selectedRows = table.getFilteredSelectedRowModel().rows;
 
@@ -119,9 +136,29 @@ export default function DataTable<TData, TValue>({
     });
   };
 
+  const selectedRow = table.getFilteredSelectedRowModel().rows[0]
+    ?.original as qr_code;
+
+  const selectedRowId = selectedRow?.id;
+
+  console.log('selectedRowId', selectedRowId);
   return (
     <div>
       <div className="flex gap-2">
+        {!pathname.includes('/QRCodeLogs') ? (
+          <>
+            {table.getFilteredSelectedRowModel().rows.length === 1 ? (
+              <Link href={`/QRCodeLogs/${selectedRowId}`}>
+                <Button variant={`default`}>View Logs</Button>
+              </Link>
+            ) : (
+              <Button variant={`default`} disabled>
+                View Logs
+              </Button>
+            )}
+          </>
+        ) : null}
+
         {user && isWriter ? (
           <>
             <Button
@@ -132,7 +169,55 @@ export default function DataTable<TData, TValue>({
               {pathname === '/Archive' ? 'Unarchive' : 'Archive'}
             </Button>
 
-            {pathname === '/Archive' ? (
+            {pathname === '/' || pathname === '/Archive' ? (
+              <AlertDialog>
+                <AlertDialogTrigger asChild>
+                  <Button
+                    variant="default"
+                    disabled={!table.getFilteredSelectedRowModel().rows.length}
+                  >
+                    {pathname === '/' || pathname === '/Archive'
+                      ? 'Deactivate'
+                      : 'Activate'}
+                  </Button>
+                </AlertDialogTrigger>
+                <AlertDialogContent>
+                  <AlertDialogHeader>
+                    <AlertDialogTitle>
+                      {table.getFilteredSelectedRowModel().rows.length > 1
+                        ? 'Are you sure you want to deactivate these QR Codes?'
+                        : 'Are you sure you want to deactivate this QR Code?'}
+                    </AlertDialogTitle>
+                    <AlertDialogDescription>
+                      This will erase the current YouTube URL and replace it
+                      with the URL of the home page.
+                    </AlertDialogDescription>
+                  </AlertDialogHeader>
+                  <AlertDialogFooter>
+                    <AlertDialogCancel>Cancel</AlertDialogCancel>
+                    <AlertDialogAction
+                      onClick={toggleActive}
+                      disabled={
+                        !table.getFilteredSelectedRowModel().rows.length
+                      }
+                      className="bg-orange-500 hover:bg-orange-400"
+                    >
+                      Deactivate
+                    </AlertDialogAction>
+                  </AlertDialogFooter>
+                </AlertDialogContent>
+              </AlertDialog>
+            ) : (
+              <Button
+                variant={`default`}
+                onClick={toggleActive}
+                disabled={!table.getFilteredSelectedRowModel().rows.length}
+              >
+                {pathname === '/Inactive' ? 'Activate' : 'Deactivate'}
+              </Button>
+            )}
+
+            {pathname === '/Archive' || pathname === '/Inactive' ? (
               <AlertDialog>
                 <AlertDialogTrigger asChild>
                   <Button

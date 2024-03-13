@@ -38,8 +38,10 @@ export default function QRCodeForm({
   const [isUrlInUse, setIsUrlInUse] = useState(false);
 
   // Set up mechanism for counting characters in the description field
-  const [description, setDescription] = useState('');
-  const [descriptionCount, setDescriptionCount] = useState(0);
+  const [description, setDescription] = useState(qr_code?.description || '');
+  const [descriptionCount, setDescriptionCount] = useState(
+    qr_code?.description?.length || 0,
+  );
   const handleDescriptionChange = (
     e: React.ChangeEvent<HTMLTextAreaElement>,
   ) => {

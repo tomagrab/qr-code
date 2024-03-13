@@ -51,6 +51,7 @@ export const createQRCode = async (
       data: {
         title: values.title,
         description: values.description,
+        active: values.active,
         archived: values.archived,
         youtube_title: youtube_title,
         youtube_url: values.youtube_url,
@@ -59,11 +60,8 @@ export const createQRCode = async (
       },
     });
 
-    const qr_code_log = await createQRCodeLog(qr_code.id);
-
     return {
       qr_code,
-      qr_code_log,
     };
   } catch (error) {
     console.error(error);
@@ -190,6 +188,7 @@ export const updateQRCode = async (
       data: {
         title: values.title,
         description: values.description,
+        active: values.active,
         archived: values.archived,
         youtube_title: youtube_title,
         youtube_url: values.youtube_url,
@@ -197,12 +196,8 @@ export const updateQRCode = async (
       },
     });
 
-    // Create a new record in the QR code log
-    const updated_qr_code_log = await createQRCodeLog(qr_code.id);
-
     return {
       qr_code,
-      updated_qr_code_log,
     };
   } catch (error) {
     console.error(error);
@@ -288,6 +283,9 @@ export const toggleActiveQRCode = async (id: number) => {
       },
       data: {
         active: !active,
+        youtube_url: active
+          ? 'https://www.velocitor-qr-code.com/'
+          : qr_code.youtube_url,
       },
     });
 
@@ -333,6 +331,21 @@ export const createQRCodeLog = async (qr_code_id: number) => {
       data: {
         qr_code_id,
         version: newVersionNumber, // Use the new or incremented version number
+        title: latestLogEntry ? latestLogEntry.title : 'New QR Code Log',
+        description: latestLogEntry
+          ? latestLogEntry.description
+          : 'This is a new QR Code Log',
+        active: latestLogEntry ? latestLogEntry.active : false,
+        archived: latestLogEntry ? latestLogEntry.archived : false,
+        youtube_title: latestLogEntry
+          ? latestLogEntry.youtube_title
+          : 'No title found',
+        youtube_url: latestLogEntry
+          ? latestLogEntry.youtube_url
+          : 'https://www.velocitor-qr-code.com/',
+        pdf_url: latestLogEntry
+          ? latestLogEntry.pdf_url
+          : 'https://www.velocitor-qr-code.com/',
       },
     });
 
