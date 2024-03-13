@@ -1,4 +1,5 @@
-import { FormatDate } from '@/lib/Utilities/FormatDate/FormatDate';
+import { SignedIn, useUser } from '@clerk/nextjs';
+import { currentUser } from '@clerk/nextjs/server';
 import { qr_code } from '@prisma/client';
 
 type QRCodeDetailsBodyProps = {
@@ -7,14 +8,21 @@ type QRCodeDetailsBodyProps = {
   qr_code_archived: qr_code['archived'];
 };
 
-export default function QRCodeDetailsBody({
+export default async function QRCodeDetailsBody({
   qr_code_author,
   qr_code_active,
   qr_code_archived,
 }: QRCodeDetailsBodyProps) {
+  const user = await currentUser();
+  const userEmail = user?.emailAddresses[0].emailAddress;
+  const isWriter =
+    userEmail === process.env.NEXT_PUBLIC_WRITER_EMAIL_1 ||
+    userEmail === process.env.NEXT_PUBLIC_WRITER_EMAIL_2;
   return (
     <div className="flex flex-col justify-evenly">
-      <p>Author:&nbsp;{qr_code_author}</p>
+      <SignedIn>
+        {user && isWriter ? <p>Author:&nbsp;{qr_code_author}</p> : null}
+      </SignedIn>
       <p>
         Active:&nbsp;
         {qr_code_active ? (
