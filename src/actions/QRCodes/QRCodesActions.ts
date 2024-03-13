@@ -94,8 +94,6 @@ export const UpdateQRCode = async (
   id: number,
   values: z.infer<typeof QRCodeFormSchema>,
 ) => {
-  console.log('UpdateQRCode', id, values);
-
   // Set up value to store warning messages
   let warnings = [];
 
@@ -146,8 +144,15 @@ export const UpdateQRCode = async (
 
   // Proceed to update the QR Code if neither URL exists already
   const updatedQRCode = await updateQRCode(id, youtube_title, values);
+
   if (!updatedQRCode) {
     throw new Error('Failed to update QR code');
+  }
+
+  const newQRCodeLog = await createQRCodeLog(updatedQRCode.qr_code.id);
+
+  if (!newQRCodeLog) {
+    throw new Error('Failed to create QR code log');
   }
 
   revalidatePath('/');
@@ -161,7 +166,6 @@ export const UpdateQRCode = async (
 };
 
 export const DeleteQRCode = async (id: number) => {
-  console.log('DeleteQRCode', id);
   const deletedQRCode = await deleteQRCode(id);
   if (!deletedQRCode) {
     throw new Error('Failed to delete QR code');

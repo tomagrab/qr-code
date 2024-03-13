@@ -330,22 +330,9 @@ export const createQRCodeLog = async (qr_code_id: number) => {
     const qr_code_log = await prisma.qr_code_log.create({
       data: {
         qr_code_id,
-        version: newVersionNumber, // Use the new or incremented version number
-        title: latestLogEntry ? latestLogEntry.title : 'New QR Code Log',
-        description: latestLogEntry
-          ? latestLogEntry.description
-          : 'This is a new QR Code Log',
-        active: latestLogEntry ? latestLogEntry.active : false,
-        archived: latestLogEntry ? latestLogEntry.archived : false,
-        youtube_title: latestLogEntry
-          ? latestLogEntry.youtube_title
-          : 'No title found',
-        youtube_url: latestLogEntry
-          ? latestLogEntry.youtube_url
-          : 'https://www.velocitor-qr-code.com/',
-        pdf_url: latestLogEntry
-          ? latestLogEntry.pdf_url
-          : 'https://www.velocitor-qr-code.com/',
+        version: newVersionNumber,
+        title: latestLogEntry?.title ?? 'QR Code Log',
+        ...latestLogEntry,
       },
     });
 

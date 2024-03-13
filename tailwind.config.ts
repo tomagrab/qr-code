@@ -29,6 +29,8 @@ const config = {
         vellightred: '#ff6e63',
         vellink: '#56bfb5',
         vellightlink: '#6dd1c8',
+        velyellow: '#f8dc5a',
+        vellightyellow: '#fce36d',
         border: 'hsl(var(--border))',
         input: 'hsl(var(--input))',
         ring: 'hsl(var(--ring))',

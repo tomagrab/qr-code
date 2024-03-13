@@ -40,6 +40,14 @@ import {
   AlertDialogTitle,
   AlertDialogTrigger,
 } from '@/components/ui/alert-dialog';
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from '@/components/ui/dialog';
 import { useState } from 'react';
 import {
   ArchiveQRCode,
@@ -52,6 +60,9 @@ import { qr_code } from '@prisma/client';
 import { usePathname } from 'next/navigation';
 import { useUser } from '@clerk/nextjs';
 import Link from 'next/link';
+import { ScrollArea } from './scroll-area';
+import QRCodeForm from '../QRCodes/QRCodeForm/QRCodeForm';
+import QRCodeTableFilterInputContainer from '../QRCodes/QRCodesTable/QRCodeTableFilterInputContainer/QRCodeTableFilterInputContainer';
 
 type DataTableProps<TData, TValue> = {
   columns: ColumnDef<TData, TValue>[];
@@ -62,6 +73,7 @@ export default function DataTable<TData, TValue>({
   columns,
   data,
 }: DataTableProps<TData, TValue>) {
+  const [isEditDialogOpen, setIsEditDialogOpen] = useState(false);
   const pathname = usePathname();
   const user = useUser().user;
   const userEmail = user?.emailAddresses[0].emailAddress;
@@ -145,16 +157,126 @@ export default function DataTable<TData, TValue>({
   return (
     <div>
       <div className="flex gap-2">
+        {table.getFilteredSelectedRowModel().rows.length === 1 ? (
+          <Link href={`/QRCode/${selectedRowId}`}>
+            <Button
+              className={`
+              bg-velgreen
+              hover:bg-vellightgreen
+            `}
+            >
+              View
+            </Button>
+          </Link>
+        ) : (
+          <Button
+            variant={`default`}
+            disabled
+            className={`
+            bg-velgreen
+            `}
+          >
+            View
+          </Button>
+        )}
         {!pathname.includes('/QRCodeLogs') ? (
           <>
             {table.getFilteredSelectedRowModel().rows.length === 1 ? (
-              <Link href={`/QRCodeLogs/${selectedRowId}`}>
-                <Button variant={`default`}>View Logs</Button>
-              </Link>
+              <>
+                <Dialog
+                  open={isEditDialogOpen}
+                  onOpenChange={
+                    isEditDialogOpen
+                      ? () => setIsEditDialogOpen(false)
+                      : () => setIsEditDialogOpen(true)
+                  }
+                >
+                  <DialogTrigger
+                    className={`
+                    focus-visible:ring-rin
+                    inline-flex
+                    h-10
+                    items-center
+                    justify-center
+                    whitespace-nowrap
+                    rounded-md
+                    bg-primary
+                    bg-velblue
+                    px-4
+                    py-2
+                    text-sm
+                    font-medium
+                    text-primary-foreground
+                    ring-offset-background
+                    transition-colors
+                    hover:bg-primary/90
+                    hover:bg-vellightblue
+                    focus-visible:outline-none
+                    focus-visible:ring-2
+                    focus-visible:ring-offset-2
+                    disabled:pointer-events-none
+                    disabled:opacity-50
+                    `}
+                  >
+                    Edit
+                  </DialogTrigger>
+                  <DialogContent>
+                    <DialogHeader>
+                      <DialogTitle>
+                        <span
+                          className={`
+                text-2xl
+                font-bold
+                `}
+                        >
+                          Edit QR Code
+                        </span>
+                      </DialogTitle>
+                      <DialogDescription>
+                        This form will allow you to edit the QR code.
+                      </DialogDescription>
+                    </DialogHeader>
+                    <ScrollArea className={``}>
+                      <QRCodeForm
+                        qr_code={selectedRow}
+                        isOpen={isEditDialogOpen}
+                        setIsOpen={setIsEditDialogOpen}
+                      />
+                    </ScrollArea>
+                  </DialogContent>
+                </Dialog>
+                <Link href={`/QRCodeLogs/${selectedRowId}`}>
+                  <Button
+                    className={`
+                      bg-velyellow
+                      hover:bg-vellightyellow
+                  `}
+                  >
+                    View Logs
+                  </Button>
+                </Link>
+              </>
             ) : (
-              <Button variant={`default`} disabled>
-                View Logs
-              </Button>
+              <>
+                <Button
+                  disabled
+                  className={`
+                  bg-velblue
+                  hover:bg-vellightblue
+                  `}
+                >
+                  Edit
+                </Button>
+                <Button
+                  disabled
+                  className={`
+                  bg-velyellow
+                  hover:bg-vellightyellow
+                  `}
+                >
+                  View Logs
+                </Button>
+              </>
             )}
           </>
         ) : null}
@@ -162,7 +284,10 @@ export default function DataTable<TData, TValue>({
         {user && isWriter ? (
           <>
             <Button
-              variant={`default`}
+              className={`
+                hover:bg-velightorange
+                bg-velorange
+              `}
               onClick={toggleArchive}
               disabled={!table.getFilteredSelectedRowModel().rows.length}
             >
@@ -200,7 +325,10 @@ export default function DataTable<TData, TValue>({
                       disabled={
                         !table.getFilteredSelectedRowModel().rows.length
                       }
-                      className="bg-orange-500 hover:bg-orange-400"
+                      className={`
+                        hover:bg-velightorange 
+                        bg-velorange
+                      `}
                     >
                       Deactivate
                     </AlertDialogAction>
@@ -269,15 +397,10 @@ export default function DataTable<TData, TValue>({
           md:justify-stretch
         `}
       >
-        <div
-          className={`
-            flex
-            grow
-            flex-col
-            items-center
-          `}
+        <QRCodeTableFilterInputContainer
+          labelTitle="Filter IDs"
+          labelFor="filter-ids"
         >
-          <Label htmlFor="filter-ids">Filter IDs</Label>
           <Input
             id="filter-ids"
             name="filter-ids"
@@ -288,17 +411,12 @@ export default function DataTable<TData, TValue>({
             }
             className="max-w-sm"
           />
-        </div>
+        </QRCodeTableFilterInputContainer>
 
-        <div
-          className={`
-            flex
-            grow
-            flex-col
-            items-center
-          `}
+        <QRCodeTableFilterInputContainer
+          labelTitle="Filter Titles"
+          labelFor="filter-titles"
         >
-          <Label htmlFor="filter-titles">Filter Titles</Label>
           <Input
             id="filter-titles"
             name="filter-titles"
@@ -309,17 +427,12 @@ export default function DataTable<TData, TValue>({
             }
             className="max-w-sm"
           />
-        </div>
+        </QRCodeTableFilterInputContainer>
 
-        <div
-          className={`
-            flex
-            grow
-            flex-col
-            items-center
-          `}
+        <QRCodeTableFilterInputContainer
+          labelTitle="Filter Videos"
+          labelFor="filter-videos"
         >
-          <Label htmlFor="filter-videos">Filter Videos</Label>
           <Input
             id="filter-videos"
             name="filter-videos"
@@ -335,17 +448,12 @@ export default function DataTable<TData, TValue>({
             }
             className="max-w-sm"
           />
-        </div>
+        </QRCodeTableFilterInputContainer>
 
-        <div
-          className={`
-            flex
-            grow
-            flex-col
-            items-center
-          `}
+        <QRCodeTableFilterInputContainer
+          labelTitle="Filter Authors"
+          labelFor="filter-authors"
         >
-          <Label htmlFor="filter-authors">Filter Authors</Label>
           <Input
             id="filter-authors"
             name="filter-authors"
@@ -358,17 +466,12 @@ export default function DataTable<TData, TValue>({
             }
             className="max-w-sm"
           />
-        </div>
+        </QRCodeTableFilterInputContainer>
 
-        <div
-          className={`
-            flex
-            grow
-            flex-col
-            items-center
-          `}
+        <QRCodeTableFilterInputContainer
+          labelTitle="Filter Created At"
+          labelFor="filter-created-at"
         >
-          <Label htmlFor="filter-created-at">Filter Created At</Label>
           <Input
             id="filter-created-at"
             name="filter-created-at"
@@ -381,17 +484,12 @@ export default function DataTable<TData, TValue>({
             }
             className="max-w-sm"
           />
-        </div>
+        </QRCodeTableFilterInputContainer>
 
-        <div
-          className={`
-            flex
-            grow
-            flex-col
-            items-center
-          `}
+        <QRCodeTableFilterInputContainer
+          labelTitle="Filter Updated At"
+          labelFor="filter-updated-at"
         >
-          <Label htmlFor="filter-updated-at">Filter Updated At</Label>
           <Input
             id="filter-updated-at"
             name="filter-updated-at"
@@ -404,61 +502,57 @@ export default function DataTable<TData, TValue>({
             }
             className="max-w-sm"
           />
-        </div>
+        </QRCodeTableFilterInputContainer>
 
-        <div
-          className={`
-            flex grow
-          `}
-        >
-          <DropdownMenu>
-            <DropdownMenuTrigger asChild className={``}>
-              <div
+        <DropdownMenu>
+          <DropdownMenuTrigger asChild>
+            <div
+              className={`
+                flex
+                grow
+                flex-col
+                items-center
+                gap-2
+              `}
+            >
+              <Label htmlFor={`filter-columns`}>Filter Columns</Label>
+              <Button
+                variant="outline"
                 className={`
-                      flex
-                      flex-col
-                      items-center
-                    `}
+                grow
+              `}
+                name="filter-columns"
               >
-                <Label htmlFor="filter-columns">Filter Columns</Label>
-                <Button
-                  variant="outline"
-                  className="ml-auto"
-                  name="filter-columns"
-                >
-                  Columns
-                </Button>
-              </div>
-            </DropdownMenuTrigger>
-            <DropdownMenuContent align="end">
-              {table
-                .getAllColumns()
-                .filter(column => column.getCanHide())
-                .map(column => {
-                  return (
-                    <DropdownMenuCheckboxItem
-                      key={column.id}
-                      className="capitalize"
-                      checked={column.getIsVisible()}
-                      onCheckedChange={value =>
-                        column.toggleVisibility(!!value)
-                      }
-                    >
-                      {column.id === 'id'
-                        ? 'ID'
-                        : column.id === 'youtube_title'
-                          ? 'Video'
-                          : column.id === 'createdAt'
-                            ? 'Created At'
-                            : column.id === 'updatedAt'
-                              ? 'Updated At'
-                              : column.id}
-                    </DropdownMenuCheckboxItem>
-                  );
-                })}
-            </DropdownMenuContent>
-          </DropdownMenu>
-        </div>
+                Columns
+              </Button>
+            </div>
+          </DropdownMenuTrigger>
+          <DropdownMenuContent align="end">
+            {table
+              .getAllColumns()
+              .filter(column => column.getCanHide())
+              .map(column => {
+                return (
+                  <DropdownMenuCheckboxItem
+                    key={column.id}
+                    className="capitalize"
+                    checked={column.getIsVisible()}
+                    onCheckedChange={value => column.toggleVisibility(!!value)}
+                  >
+                    {column.id === 'id'
+                      ? 'ID'
+                      : column.id === 'youtube_title'
+                        ? 'Video'
+                        : column.id === 'createdAt'
+                          ? 'Created At'
+                          : column.id === 'updatedAt'
+                            ? 'Updated At'
+                            : column.id}
+                  </DropdownMenuCheckboxItem>
+                );
+              })}
+          </DropdownMenuContent>
+        </DropdownMenu>
       </div>
       <div
         className={`
