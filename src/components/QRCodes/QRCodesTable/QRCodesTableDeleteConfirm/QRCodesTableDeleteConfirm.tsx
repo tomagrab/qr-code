@@ -16,9 +16,30 @@ export default function QRCodesTableDeleteConfirm({
 }: QRCodesTableDeleteConfirmProps) {
   return (
     <div>
-      <h2>Are you sure you want to delete this QR Code?</h2>
+      <h2
+        className={`
+          text-lg
+          font-semibold  
+        `}
+      >
+        Are you sure you want to delete this QR Code?
+      </h2>
       <h3>This action cannot be undone.</h3>
-      <div>
+      <div
+        className={`
+          flex
+          justify-end
+          gap-2
+        `}
+      >
+        <Button
+          variant={'secondary'}
+          onClick={() => {
+            onClick(false);
+          }}
+        >
+          Cancel
+        </Button>
         <Button
           variant={`destructive`}
           onClick={async () => {
@@ -27,14 +48,6 @@ export default function QRCodesTableDeleteConfirm({
           }}
         >
           Delete
-        </Button>
-        <Button
-          variant={'secondary'}
-          onClick={() => {
-            onClick(false);
-          }}
-        >
-          Cancel
         </Button>
       </div>
     </div>

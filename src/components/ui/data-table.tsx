@@ -155,16 +155,14 @@ export default function DataTable<TData, TValue>({
                   </AlertDialogHeader>
                   <AlertDialogFooter>
                     <AlertDialogCancel>Cancel</AlertDialogCancel>
-                    <AlertDialogAction className="m-0 bg-white p-0">
-                      <Button
-                        variant="destructive"
-                        onClick={deleteSelected}
-                        disabled={
-                          !table.getFilteredSelectedRowModel().rows.length
-                        }
-                      >
-                        Delete
-                      </Button>
+                    <AlertDialogAction
+                      onClick={deleteSelected}
+                      disabled={
+                        !table.getFilteredSelectedRowModel().rows.length
+                      }
+                      className="bg-red-500 hover:bg-red-400"
+                    >
+                      Delete
                     </AlertDialogAction>
                   </AlertDialogFooter>
                 </AlertDialogContent>
