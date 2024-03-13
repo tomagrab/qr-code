@@ -2,6 +2,7 @@
 
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
 import {
   ColumnDef,
   ColumnFiltersState,
@@ -173,97 +174,206 @@ export default function DataTable<TData, TValue>({
       </div>
       <div
         className={`
-          flex
+          grid
+          grid-cols-3
           items-center
+          gap-2
           py-4
+          md:flex
+          md:items-center
+          md:justify-stretch
         `}
       >
-        <Input
-          placeholder="Filter IDs..."
-          value={(table.getColumn('id')?.getFilterValue() as string) ?? ''}
-          onChange={event =>
-            table.getColumn('id')?.setFilterValue(event.target.value)
-          }
-          className="max-w-sm"
-        />
-        <Input
-          placeholder="Filter Titles..."
-          value={(table.getColumn('title')?.getFilterValue() as string) ?? ''}
-          onChange={event =>
-            table.getColumn('title')?.setFilterValue(event.target.value)
-          }
-          className="max-w-sm"
-        />
-        <Input
-          placeholder="Filter Videos..."
-          value={
-            (table.getColumn('youtube_title')?.getFilterValue() as string) ?? ''
-          }
-          onChange={event =>
-            table.getColumn('youtube_title')?.setFilterValue(event.target.value)
-          }
-          className="max-w-sm"
-        />
-        <Input
-          placeholder="Filter Authors..."
-          value={(table.getColumn('author')?.getFilterValue() as string) ?? ''}
-          onChange={event =>
-            table.getColumn('author')?.setFilterValue(event.target.value)
-          }
-          className="max-w-sm"
-        />
-        <Input
-          placeholder="Filter Created At..."
-          value={
-            (table.getColumn('createdAt')?.getFilterValue() as string) ?? ''
-          }
-          onChange={event =>
-            table.getColumn('createdAt')?.setFilterValue(event.target.value)
-          }
-          className="max-w-sm"
-        />
-        <Input
-          placeholder="Filter Updated At..."
-          value={
-            (table.getColumn('updatedAt')?.getFilterValue() as string) ?? ''
-          }
-          onChange={event =>
-            table.getColumn('updatedAt')?.setFilterValue(event.target.value)
-          }
-          className="max-w-sm"
-        />
-        <DropdownMenu>
-          <DropdownMenuTrigger asChild>
-            <Button variant="outline" className="ml-auto">
-              Columns
-            </Button>
-          </DropdownMenuTrigger>
-          <DropdownMenuContent align="end">
-            {table
-              .getAllColumns()
-              .filter(column => column.getCanHide())
-              .map(column => {
-                return (
-                  <DropdownMenuCheckboxItem
-                    key={column.id}
-                    className="capitalize"
-                    checked={column.getIsVisible()}
-                    onCheckedChange={value => column.toggleVisibility(!!value)}
-                  >
-                    {column.id === 'id'
-                      ? 'ID'
-                      : column.id === 'youtube_title'
-                        ? 'Video'
-                        : column.id === 'createdAt'
-                          ? 'Created At'
-                          : column.id === 'updatedAt'
-                            ? 'Updated At'
-                            : column.id}
-                  </DropdownMenuCheckboxItem>
-                );
-              })}
-          </DropdownMenuContent>
-        </DropdownMenu>
+        <div
+          className={`
+            flex
+            grow
+            flex-col
+            items-center
+          `}
+        >
+          <Label htmlFor="filter-ids">Filter IDs</Label>
+          <Input
+            id="filter-ids"
+            name="filter-ids"
+            placeholder="Filter IDs..."
+            value={(table.getColumn('id')?.getFilterValue() as string) ?? ''}
+            onChange={event =>
+              table.getColumn('id')?.setFilterValue(event.target.value)
+            }
+            className="max-w-sm"
+          />
+        </div>
+
+        <div
+          className={`
+            flex
+            grow
+            flex-col
+            items-center
+          `}
+        >
+          <Label htmlFor="filter-titles">Filter Titles</Label>
+          <Input
+            id="filter-titles"
+            name="filter-titles"
+            placeholder="Filter Titles..."
+            value={(table.getColumn('title')?.getFilterValue() as string) ?? ''}
+            onChange={event =>
+              table.getColumn('title')?.setFilterValue(event.target.value)
+            }
+            className="max-w-sm"
+          />
+        </div>
+
+        <div
+          className={`
+            flex
+            grow
+            flex-col
+            items-center
+          `}
+        >
+          <Label htmlFor="filter-videos">Filter Videos</Label>
+          <Input
+            id="filter-videos"
+            name="filter-videos"
+            placeholder="Filter Videos..."
+            value={
+              (table.getColumn('youtube_title')?.getFilterValue() as string) ??
+              ''
+            }
+            onChange={event =>
+              table
+                .getColumn('youtube_title')
+                ?.setFilterValue(event.target.value)
+            }
+            className="max-w-sm"
+          />
+        </div>
+
+        <div
+          className={`
+            flex
+            grow
+            flex-col
+            items-center
+          `}
+        >
+          <Label htmlFor="filter-authors">Filter Authors</Label>
+          <Input
+            id="filter-authors"
+            name="filter-authors"
+            placeholder="Filter Authors..."
+            value={
+              (table.getColumn('author')?.getFilterValue() as string) ?? ''
+            }
+            onChange={event =>
+              table.getColumn('author')?.setFilterValue(event.target.value)
+            }
+            className="max-w-sm"
+          />
+        </div>
+
+        <div
+          className={`
+            flex
+            grow
+            flex-col
+            items-center
+          `}
+        >
+          <Label htmlFor="filter-created-at">Filter Created At</Label>
+          <Input
+            id="filter-created-at"
+            name="filter-created-at"
+            placeholder="Filter Created At..."
+            value={
+              (table.getColumn('createdAt')?.getFilterValue() as string) ?? ''
+            }
+            onChange={event =>
+              table.getColumn('createdAt')?.setFilterValue(event.target.value)
+            }
+            className="max-w-sm"
+          />
+        </div>
+
+        <div
+          className={`
+            flex
+            grow
+            flex-col
+            items-center
+          `}
+        >
+          <Label htmlFor="filter-updated-at">Filter Updated At</Label>
+          <Input
+            id="filter-updated-at"
+            name="filter-updated-at"
+            placeholder="Filter Updated At..."
+            value={
+              (table.getColumn('updatedAt')?.getFilterValue() as string) ?? ''
+            }
+            onChange={event =>
+              table.getColumn('updatedAt')?.setFilterValue(event.target.value)
+            }
+            className="max-w-sm"
+          />
+        </div>
+
+        <div
+          className={`
+            flex grow
+          `}
+        >
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild className={``}>
+              <div
+                className={`
+                      flex
+                      flex-col
+                      items-center
+                    `}
+              >
+                <Label htmlFor="filter-columns">Filter Columns</Label>
+                <Button
+                  variant="outline"
+                  className="ml-auto"
+                  name="filter-columns"
+                >
+                  Columns
+                </Button>
+              </div>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent align="end">
+              {table
+                .getAllColumns()
+                .filter(column => column.getCanHide())
+                .map(column => {
+                  return (
+                    <DropdownMenuCheckboxItem
+                      key={column.id}
+                      className="capitalize"
+                      checked={column.getIsVisible()}
+                      onCheckedChange={value =>
+                        column.toggleVisibility(!!value)
+                      }
+                    >
+                      {column.id === 'id'
+                        ? 'ID'
+                        : column.id === 'youtube_title'
+                          ? 'Video'
+                          : column.id === 'createdAt'
+                            ? 'Created At'
+                            : column.id === 'updatedAt'
+                              ? 'Updated At'
+                              : column.id}
+                    </DropdownMenuCheckboxItem>
+                  );
+                })}
+            </DropdownMenuContent>
+          </DropdownMenu>
+        </div>
       </div>
       <div
         className={`
