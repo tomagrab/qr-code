@@ -28,6 +28,17 @@ import {
   DropdownMenuContent,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogTrigger,
+} from '@/components/ui/alert-dialog';
 import { useState } from 'react';
 import {
   ArchiveQRCode,
@@ -121,13 +132,43 @@ export default function DataTable<TData, TValue>({
             </Button>
 
             {pathname === '/Archive' ? (
-              <Button
-                variant={`destructive`}
-                onClick={deleteSelected}
-                disabled={!table.getFilteredSelectedRowModel().rows.length}
-              >
-                Delete
-              </Button>
+              <AlertDialog>
+                <AlertDialogTrigger asChild>
+                  <Button
+                    variant="destructive"
+                    disabled={!table.getFilteredSelectedRowModel().rows.length}
+                  >
+                    Delete
+                  </Button>
+                </AlertDialogTrigger>
+                <AlertDialogContent>
+                  <AlertDialogHeader>
+                    <AlertDialogTitle>
+                      {table.getFilteredSelectedRowModel().rows.length > 1
+                        ? 'Are you sure you want to delete these QR Codes?'
+                        : 'Are you sure you want to delete this QR Code?'}
+                    </AlertDialogTitle>
+                    <AlertDialogDescription>
+                      This action cannot be undone. This will permanently delete
+                      the QR Code. This action cannot be undone.
+                    </AlertDialogDescription>
+                  </AlertDialogHeader>
+                  <AlertDialogFooter>
+                    <AlertDialogCancel>Cancel</AlertDialogCancel>
+                    <AlertDialogAction className="m-0 bg-white p-0">
+                      <Button
+                        variant="destructive"
+                        onClick={deleteSelected}
+                        disabled={
+                          !table.getFilteredSelectedRowModel().rows.length
+                        }
+                      >
+                        Delete
+                      </Button>
+                    </AlertDialogAction>
+                  </AlertDialogFooter>
+                </AlertDialogContent>
+              </AlertDialog>
             ) : null}
           </>
         ) : null}
