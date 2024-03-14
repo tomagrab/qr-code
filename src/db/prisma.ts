@@ -306,11 +306,17 @@ export const toggleActiveQRCode = async (id: number) => {
         id,
       },
       data: {
+        // Toggle active
         active: !active,
+        // If active, set archived to false. If inactive, keep the current value
+        archived: active ? false : qr_code.archived,
+        // If active, set the youtube_url to the Velocitor QR Code website. If inactive, keep the current value
         youtube_url: active
           ? 'https://www.velocitor-qr-code.com/'
           : qr_code.youtube_url,
+        // If active, set the youtube_title to 'No Title found'. If inactive, keep the current value
         youtube_title: active ? 'No Title found' : qr_code.youtube_title,
+        // If active, set the pdf_url to the Velocitor QR Code website. If inactive, keep the current value
         pdf_url: active
           ? 'https://www.velocitor-qr-code.com/'
           : qr_code.pdf_url,

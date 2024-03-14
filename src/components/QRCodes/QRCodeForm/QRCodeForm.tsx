@@ -38,8 +38,6 @@ export default function QRCodeForm({
   const [loading, setLoading] = useState(false);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
   const [isUrlInUse, setIsUrlInUse] = useState(false);
-
-  // Set up mechanism for counting characters in the description field
   const [description, setDescription] = useState(qr_code?.description || '');
   const [descriptionCount, setDescriptionCount] = useState(
     qr_code?.description?.length || 0,
@@ -56,7 +54,7 @@ export default function QRCodeForm({
     defaultValues: {
       title: qr_code?.title || '',
       description: qr_code?.description || '',
-      active: qr_code?.active || true,
+      active: qr_code?.active !== undefined ? qr_code?.active : true,
       archived: qr_code?.archived || false,
       youtube_url: qr_code?.youtube_url || 'https://www.velocitor-qr-code.com/',
       pdf_url: qr_code?.pdf_url || 'https://www.velocitor-qr-code.com/',
