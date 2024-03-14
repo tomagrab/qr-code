@@ -77,6 +77,10 @@ export const readQRCode = async (id: number) => {
       },
     });
 
+    if (!qr_code) {
+      throw new Error('QR code not found');
+    }
+
     return qr_code;
   } catch (error) {
     console.error(error);

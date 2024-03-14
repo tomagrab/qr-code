@@ -142,8 +142,6 @@ export const UpdateQRCode = async (
     }
   }
 
-  console.log('id', id, 'youtube_title', youtube_title, 'values', values);
-
   // Proceed to update the QR Code if neither URL exists already
   const updatedQRCode = await updateQRCode(id, youtube_title, values);
 
@@ -162,12 +160,25 @@ export const UpdateQRCode = async (
   // Return the updated QR Code
   return {
     updatedQRCode,
+    newQRCodeLog,
     message: 'QR Code successfully updated.',
     warnings,
   };
 };
 
 export const DeleteQRCode = async (id: number) => {
+  // Before deleting the QR Code, update the QR Code with default values
+  const values = {
+    title: 'No title',
+    description: 'No description',
+    active: false,
+    archived: false,
+    youtube_url: 'https://www.velocitor-qr-code.com/',
+    pdf_url: 'https://www.velocitor-qr-code.com/',
+  };
+
+  const updatedQRCode = await updateQRCode(id, `No YouTube title`, values);
+
   const deletedQRCode = await deleteQRCode(id);
   if (!deletedQRCode) {
     throw new Error('Failed to delete QR code');
@@ -176,6 +187,7 @@ export const DeleteQRCode = async (id: number) => {
   revalidatePath('/');
 
   return {
+    updatedQRCode,
     deletedQRCode,
     message: 'QR Code successfully deleted.',
   };
@@ -197,13 +209,21 @@ export const ArchiveQRCode = async (id: number) => {
 
 export const ToggleArchiveQRCode = async (id: number) => {
   const toggled_qr_code = await toggleArchiveQRCode(id);
+
   if (!toggled_qr_code) {
     throw new Error('Failed to toggle archive QR code');
+  }
+
+  const newQRCodeLog = await createQRCodeLog(toggled_qr_code.id);
+
+  if (!newQRCodeLog) {
+    throw new Error('Failed to create QR code log');
   }
 
   revalidatePath('/');
   return {
     toggled_qr_code,
+    newQRCodeLog,
     message: 'QR Code successfully toggled.',
   };
 };
@@ -214,9 +234,16 @@ export const ToggleActiveQRCode = async (id: number) => {
     throw new Error('Failed to toggle active QR code');
   }
 
+  const newQRCodeLog = await createQRCodeLog(toggled_qr_code.id);
+
+  if (!newQRCodeLog) {
+    throw new Error('Failed to create QR code log');
+  }
+
   revalidatePath('/');
   return {
     toggled_qr_code,
+    newQRCodeLog,
     message: 'QR Code successfully toggled.',
   };
 };

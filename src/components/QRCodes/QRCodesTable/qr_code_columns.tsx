@@ -98,6 +98,7 @@ export const qr_code_columns: ColumnDef<qr_code>[] = [
   },
   {
     accessorKey: 'createdAt',
+    accessorFn: row => FormatDate(row.createdAt),
     header: ({ column }) => {
       return <QRCodesTableHeader column={column} title="Created At" />;
     },
@@ -115,6 +116,7 @@ export const qr_code_columns: ColumnDef<qr_code>[] = [
   },
   {
     accessorKey: 'updatedAt',
+    accessorFn: row => FormatDate(row.updatedAt),
     header: ({ column }) => {
       return <QRCodesTableHeader column={column} title="Updated At" />;
     },

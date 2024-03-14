@@ -9,7 +9,7 @@ datasource db {
 
 model qr_code {
   id          Int       @id @default(autoincrement())
-  version     Int       @default(autoincrement())
+  version     Int       @default(1)
   title       String    @db.VarChar(256)
   description String?   @db.Text
   active      Boolean   @default(true)
@@ -27,7 +27,7 @@ model qr_code {
 model qr_code_log {
   id          Int       @id @default(autoincrement())
   qr_code_id  Int
-  version     Int       @default(autoincrement())
+  version     Int       @default(1)
   title       String    @db.VarChar(256)
   description String?   @db.Text
   active      Boolean   @default(true)

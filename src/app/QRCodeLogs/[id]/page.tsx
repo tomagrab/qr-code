@@ -15,7 +15,11 @@ type QRCodeDetailsProps = {
   };
 };
 
-export default async function QRCodeLogs({
+type QRCodeDetailsHeaderProps = {
+  title: string;
+};
+
+export default async function QRCodeDetailsLogs({
   params,
   searchParams,
 }: QRCodeDetailsProps) {
@@ -34,7 +38,7 @@ export default async function QRCodeLogs({
   if (!qr_code_logs || qr_code_logs.length === 0) {
     return (
       <main>
-        <QRCodeLogsHeader />
+        <QRCodeLogsHeader title={`QR Code # ${id} | Logs`} />
         <div
           className={`
             flex
@@ -79,7 +83,7 @@ export default async function QRCodeLogs({
   if (!qr_code_logs || qr_code_logs.length === 0) {
     return (
       <main>
-        <QRCodeLogsHeader />
+        <QRCodeLogsHeader title={`QR Code # ${id} | Logs`} />
         <div
           className={`
             flex
@@ -106,7 +110,7 @@ export default async function QRCodeLogs({
 
   return (
     <main>
-      <QRCodeLogsHeader />
+      <QRCodeLogsHeader title={`QR Code # ${id} | Logs`} />
       {qr_code_logs && qr_code_logs.length > 0 ? (
         <DataTable columns={qr_code_columns} data={transformedData} />
       ) : (
@@ -135,7 +139,7 @@ export default async function QRCodeLogs({
   );
 }
 
-const QRCodeLogsHeader = () => {
+const QRCodeLogsHeader = ({ title }: QRCodeDetailsHeaderProps) => {
   return (
     <div
       className={`
@@ -153,7 +157,7 @@ const QRCodeLogsHeader = () => {
             font-bold
           `}
       >
-        QR Code Logs
+        {title}
       </h2>
     </div>
   );
