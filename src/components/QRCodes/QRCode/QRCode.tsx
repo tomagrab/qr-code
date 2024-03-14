@@ -11,10 +11,12 @@ import { QRCodeSVG } from 'qrcode.react';
 import { Button } from '../../ui/button';
 
 type QRCodeProps = {
+  title: string;
+  description: string;
   value: string;
 };
 
-export default function QRCode({ value }: QRCodeProps) {
+export default function QRCode({ title, description, value }: QRCodeProps) {
   // Function to handle print action
   const handlePrint = () => {
     window.print();
@@ -30,10 +32,14 @@ export default function QRCode({ value }: QRCodeProps) {
         <div className="printable-section flex flex-col items-center gap-4">
           <DialogHeader className="flex flex-col items-center">
             <DialogTitle>
-              <span className="text-2xl font-bold">Scan QR Code</span>
+              <span className="text-2xl font-bold">
+                {title && title.length > 0 ? title : 'Scan the QR Code'}
+              </span>
             </DialogTitle>
             <DialogDescription>
-              Scan to open the most recent VEDR installation video
+              {description && description.length > 0
+                ? description
+                : 'Scan the QR Code on your mobile device'}
             </DialogDescription>
           </DialogHeader>
           <QRCodeSVG value={value} className="h-60 w-60" />

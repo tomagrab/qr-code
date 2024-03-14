@@ -113,6 +113,8 @@ export default async function QRCodeDetails({
           ) : null}
           <div className="flex justify-evenly gap-4">
             <QRCode
+              title={qr_code.title || ''}
+              description={qr_code.description || ''}
               value={`https://velocitor-qr-code.com/api/YouTubeLink/${qr_code.id}`}
             />
             <QRCodeDetailsBody
