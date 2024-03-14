@@ -78,7 +78,10 @@ export default async function QRCodeDetails({
                   {qr_code.youtube_title}
                 </h3>
               ) : null}
-              <EmbeddedYouTubeVideo videoUrl={qr_code.youtube_url} />
+              {qr_code.youtube_url ===
+              'https://www.velocitor-qr-code.com/' ? null : (
+                <EmbeddedYouTubeVideo videoUrl={qr_code.youtube_url} />
+              )}
             </>
           ) : null}
           <div className="flex justify-evenly gap-4">
