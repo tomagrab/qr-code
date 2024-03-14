@@ -3,7 +3,6 @@ import QRCode from '@/components/QRCodes/QRCode/QRCode';
 import QRCodeDetailsBody from '@/components/QRCodes/QRCodeDetails/QRCodeDetailsBody/QRCodeDetailsBody';
 import QRCodeDetailsDescription from '@/components/QRCodes/QRCodeDetails/QRCodeDetailsDescription/QRCodeDetailsDescription';
 import QRCodeDetailsHeader from '@/components/QRCodes/QRCodeDetails/QRCodeDetailsHeader/QRCodeDetailsHeader';
-import { Badge } from '@/components/ui/badge';
 import { readQRCode } from '@/db/prisma';
 import { currentUser } from '@clerk/nextjs/server';
 import { notFound } from 'next/navigation';

@@ -40,6 +40,12 @@ export default function QRCodeDetailsDescription({
               gap-2
           `}
         >
+          {/* Todo: Add delete button */}
+          {/* 
+            {!qr_code.active || qr_code.archived ? (
+
+            ) : ()} 
+            */}
           <QRCodeDialog
             title={pathname.includes('QRCodeLogs') ? 'Revert' : 'Edit'}
             subtitle={

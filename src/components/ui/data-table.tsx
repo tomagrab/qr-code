@@ -188,16 +188,17 @@ export default function DataTable<TData, TValue>({
           <>
             {table.getFilteredSelectedRowModel().rows.length === 1 ? (
               <>
-                <Dialog
-                  open={isEditDialogOpen}
-                  onOpenChange={
-                    isEditDialogOpen
-                      ? () => setIsEditDialogOpen(false)
-                      : () => setIsEditDialogOpen(true)
-                  }
-                >
-                  <DialogTrigger
-                    className={`
+                {!pathname.includes('Archive') ? (
+                  <Dialog
+                    open={isEditDialogOpen}
+                    onOpenChange={
+                      isEditDialogOpen
+                        ? () => setIsEditDialogOpen(false)
+                        : () => setIsEditDialogOpen(true)
+                    }
+                  >
+                    <DialogTrigger
+                      className={`
                     focus-visible:ring-rin
                     inline-flex
                     h-10
@@ -222,38 +223,40 @@ export default function DataTable<TData, TValue>({
                     disabled:pointer-events-none
                     disabled:opacity-50
                     `}
-                  >
-                    {pathname.includes('QRCodeLogs') ? 'Revert' : 'Edit'}
-                  </DialogTrigger>
-                  <DialogContent>
-                    <DialogHeader>
-                      <DialogTitle>
-                        <span
-                          className={`
+                    >
+                      {pathname.includes('QRCodeLogs') ? 'Revert' : 'Edit'}
+                    </DialogTrigger>
+                    <DialogContent>
+                      <DialogHeader>
+                        <DialogTitle>
+                          <span
+                            className={`
                             text-2xl
                             font-bold
                             `}
-                        >
+                          >
+                            {pathname.includes('QRCodeLogs')
+                              ? 'Revert QR Code'
+                              : 'Edit'}
+                          </span>
+                        </DialogTitle>
+                        <DialogDescription>
                           {pathname.includes('QRCodeLogs')
-                            ? 'Revert QR Code'
-                            : 'Edit'}
-                        </span>
-                      </DialogTitle>
-                      <DialogDescription>
-                        {pathname.includes('QRCodeLogs')
-                          ? 'Revert the QR Code to a previous state.'
-                          : 'Edit the QR Code.'}
-                      </DialogDescription>
-                    </DialogHeader>
-                    <ScrollArea className={``}>
-                      <QRCodeForm
-                        qr_code={selectedRow}
-                        isOpen={isEditDialogOpen}
-                        setIsOpen={setIsEditDialogOpen}
-                      />
-                    </ScrollArea>
-                  </DialogContent>
-                </Dialog>
+                            ? 'Revert the QR Code to a previous state.'
+                            : 'Edit the QR Code.'}
+                        </DialogDescription>
+                      </DialogHeader>
+                      <ScrollArea className={``}>
+                        <QRCodeForm
+                          qr_code={selectedRow}
+                          isOpen={isEditDialogOpen}
+                          setIsOpen={setIsEditDialogOpen}
+                        />
+                      </ScrollArea>
+                    </DialogContent>
+                  </Dialog>
+                ) : null}
+
                 {!pathname.includes('QRCodeLogs') ? (
                   <Link href={`/QRCodeLogs/${selectedRowId}`}>
                     <Button
@@ -269,15 +272,17 @@ export default function DataTable<TData, TValue>({
               </>
             ) : (
               <>
-                <Button
-                  disabled
-                  className={`
+                {!pathname.includes('Archive') ? (
+                  <Button
+                    disabled
+                    className={`
                   bg-velblue
                   hover:bg-vellightblue
                   `}
-                >
-                  {pathname.includes('QRCodeLogs') ? 'Revert' : 'Edit'}
-                </Button>
+                  >
+                    {pathname.includes('QRCodeLogs') ? 'Revert' : 'Edit'}
+                  </Button>
+                ) : null}
                 {!pathname.includes('QRCodeLogs') ? (
                   <Button
                     disabled
