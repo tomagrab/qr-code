@@ -2,6 +2,7 @@ import { qr_code_columns } from '@/components/QRCodes/QRCodesTable/qr_code_colum
 import DataTable from '@/components/ui/data-table';
 import { readQRCodeLogsByQRCode } from '@/db/prisma';
 import { currentUser } from '@clerk/nextjs/server';
+import { qr_code } from '@prisma/client';
 import { redirect } from 'next/navigation';
 
 type QRCodeDetailsProps = {
@@ -58,22 +59,50 @@ export default async function QRCodeLogs({
     );
   }
 
-  const transformedData = qr_code_logs?.map(log => ({
-    // Assuming you have a way to obtain or generate the missing properties
-    // For properties that don't exist in qr_code_logs, you'll need to provide values or exclude them if they're optional
-    id: log.id,
-    title: 'QR Code Log', // This needs to be determined based on your application's logic
-    description: `This is a log for QR Code # ${log.qr_code_id}`, // This needs to be determined based on your application's logic
-    active: true, // Determine the correct value based on your application's logic
-    archived: false, // Determine the correct value based on your application's logic
-    youtube_title: '', // This needs to be determined based on your application's logic
-    youtube_url: log.youtube_url,
-    pdf_url: log.pdf_url,
-    author: '', // Determine the correct value based on your application's logic
-    createdAt: log.createdAt,
-    updatedAt: log.updatedAt,
-    // Include other properties as necessary
-  }));
+  const transformedData: qr_code[] = qr_code_logs.map(qr_code_log => {
+    return {
+      id: qr_code_log.qr_code_id,
+      version: qr_code_log.version,
+      title: qr_code_log.title,
+      description: qr_code_log.description,
+      active: qr_code_log.active,
+      archived: qr_code_log.archived,
+      youtube_title: qr_code_log.youtube_title,
+      youtube_url: qr_code_log.youtube_url,
+      pdf_url: qr_code_log.pdf_url,
+      author: qr_code_log.author,
+      createdAt: qr_code_log.createdAt,
+      updatedAt: qr_code_log.updatedAt,
+    };
+  });
+
+  if (!qr_code_logs || qr_code_logs.length === 0) {
+    return (
+      <main>
+        <QRCodeLogsHeader />
+        <div
+          className={`
+            flex
+            flex-row
+            items-center
+            justify-center
+            gap-2
+            px-2
+            py-4
+          `}
+        >
+          <h3
+            className={`
+              text-xl
+              font-bold
+            `}
+          >
+            No QRCodeLogs have been made for this QR Code!
+          </h3>
+        </div>
+      </main>
+    );
+  }
 
   return (
     <main>
@@ -124,7 +153,7 @@ const QRCodeLogsHeader = () => {
             font-bold
           `}
       >
-        QRCodeLogs QR Codes
+        QR Code Logs
       </h2>
     </div>
   );

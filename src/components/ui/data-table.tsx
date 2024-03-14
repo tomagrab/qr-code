@@ -153,7 +153,6 @@ export default function DataTable<TData, TValue>({
 
   const selectedRowId = selectedRow?.id;
 
-  console.log('selectedRowId', selectedRowId);
   return (
     <div>
       <div className="flex gap-2">
@@ -225,9 +224,9 @@ export default function DataTable<TData, TValue>({
                       <DialogTitle>
                         <span
                           className={`
-                text-2xl
-                font-bold
-                `}
+                            text-2xl
+                            font-bold
+                            `}
                         >
                           Edit QR Code
                         </span>
@@ -248,8 +247,8 @@ export default function DataTable<TData, TValue>({
                 <Link href={`/QRCodeLogs/${selectedRowId}`}>
                   <Button
                     className={`
-                      bg-vellink
-                      hover:bg-vellightlink
+                    bg-vellink
+                    hover:bg-vellightlink
                   `}
                   >
                     View Logs

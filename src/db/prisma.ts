@@ -329,10 +329,18 @@ export const createQRCodeLog = async (qr_code_id: number) => {
     // Create a new qr_code_log entry with the incremented version number
     const qr_code_log = await prisma.qr_code_log.create({
       data: {
-        qr_code_id,
+        qr_code_id: qr_code_id,
         version: newVersionNumber,
         title: latestLogEntry?.title ?? 'QR Code Log',
-        ...latestLogEntry,
+        description: latestLogEntry?.description ?? 'QR Code Log',
+        active: latestLogEntry?.active ?? true,
+        archived: latestLogEntry?.archived ?? false,
+        youtube_title: latestLogEntry?.youtube_title ?? 'QR Code Log',
+        youtube_url: latestLogEntry?.youtube_url ?? 'QR Code Log',
+        pdf_url: latestLogEntry?.pdf_url ?? 'QR Code Log',
+        createdAt: latestLogEntry?.createdAt ?? new Date(),
+        updatedAt: latestLogEntry?.updatedAt ?? new Date(),
+        author: latestLogEntry?.author ?? 'QR Code Log',
       },
     });
 

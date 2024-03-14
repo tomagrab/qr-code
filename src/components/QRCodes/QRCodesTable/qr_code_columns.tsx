@@ -3,7 +3,6 @@
 import QRCode from '@/components/QRCodes/QRCode/QRCode';
 import { qr_code } from '@prisma/client';
 import { ColumnDef } from '@tanstack/react-table';
-import QRCodeTableActions from '@/components/QRCodes/QRCodesTable/QRCodeTableActions/QRCodeTableActions';
 import { FormatDate } from '@/lib/Utilities/FormatDate/FormatDate';
 import QRCodesTableHeader from './QRCodesTableHeader/QRCodesTableHeader';
 import QRCodesTableCell from './QRCodesTableCell/QRCodesTableCell';
@@ -74,17 +73,7 @@ export const qr_code_columns: ColumnDef<qr_code>[] = [
       return <QRCodesTableHeader column={column} title="Title" />;
     },
     cell: ({ row }) => {
-      return (
-        <QRCodesTableCell>
-          <Badge
-            className={`
-              ${'truncate'}
-            `}
-          >
-            {row.original.title}
-          </Badge>
-        </QRCodesTableCell>
-      );
+      return <QRCodesTableCell>{row.original.title}</QRCodesTableCell>;
     },
   },
   {
@@ -139,6 +128,15 @@ export const qr_code_columns: ColumnDef<qr_code>[] = [
           ''
         );
       }
+    },
+  },
+  {
+    accessorKey: 'version',
+    header: ({ column }) => {
+      return <QRCodesTableHeader column={column} title="Version" />;
+    },
+    cell: ({ row }) => {
+      return <QRCodesTableCell>{row.original.version}</QRCodesTableCell>;
     },
   },
   /*   {

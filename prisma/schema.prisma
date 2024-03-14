@@ -9,6 +9,7 @@ datasource db {
 
 model qr_code {
   id          Int       @id @default(autoincrement())
+  version     Int       @default(autoincrement())
   title       String    @db.VarChar(256)
   description String?   @db.Text
   active      Boolean   @default(true)
@@ -34,6 +35,7 @@ model qr_code_log {
   youtube_title String? @db.VarChar(256)
   youtube_url String?   @db.VarChar(256)
   pdf_url     String?   @db.VarChar(256)
+  author      String   @db.VarChar(256)
   createdAt   DateTime  @default(now()) @db.Timestamp(6)
   updatedAt   DateTime  @updatedAt @db.Timestamp(6)
   qr_code     qr_code   @relation(fields: [qr_code_id], references: [id], onDelete: Cascade)
