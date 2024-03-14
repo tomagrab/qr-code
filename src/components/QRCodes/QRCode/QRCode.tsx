@@ -31,12 +31,20 @@ export default function QRCode({ title, description, value }: QRCodeProps) {
       <DialogContent className="printable-content flex flex-col items-center">
         <div className="printable-section flex flex-col items-center gap-4">
           <DialogHeader className="flex flex-col items-center">
-            <DialogTitle>
-              <span className="text-2xl font-bold">
-                {title && title.length > 0 ? title : 'Scan the QR Code'}
-              </span>
+            <DialogTitle
+              className={`
+                text-center
+                text-2xl
+                font-bold
+              `}
+            >
+              {title && title.length > 0 ? title : 'Scan the QR Code'}
             </DialogTitle>
-            <DialogDescription>
+            <DialogDescription
+              className={`
+                text-center
+              `}
+            >
               {description && description.length > 0
                 ? description
                 : 'Scan the QR Code on your mobile device'}

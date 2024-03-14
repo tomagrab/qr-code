@@ -259,6 +259,9 @@ export const toggleArchiveQRCode = async (id: number) => {
       throw new Error('QR code not found');
     }
 
+    // Update the version number of the QR code record
+    const newVersion = qr_code.version + 1;
+
     const archived = qr_code.archived;
 
     const toggled_qr_code = await prisma.qr_code.update({
@@ -267,6 +270,7 @@ export const toggleArchiveQRCode = async (id: number) => {
       },
       data: {
         archived: !archived,
+        version: newVersion,
       },
     });
 
@@ -303,6 +307,9 @@ export const toggleActiveQRCode = async (id: number) => {
       throw new Error('QR code not found');
     }
 
+    // Update the version number of the QR code record
+    const newVersion = qr_code.version + 1;
+
     const active = qr_code.active;
 
     const toggled_qr_code = await prisma.qr_code.update({
@@ -324,6 +331,7 @@ export const toggleActiveQRCode = async (id: number) => {
         pdf_url: active
           ? 'https://www.velocitor-qr-code.com/'
           : qr_code.pdf_url,
+        version: newVersion,
       },
     });
 
