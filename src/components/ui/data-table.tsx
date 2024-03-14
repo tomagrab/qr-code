@@ -103,6 +103,11 @@ export default function DataTable<TData, TValue>({
     },
   });
 
+  const selectedRow = table.getFilteredSelectedRowModel().rows[0]
+    ?.original as qr_code;
+  const selectedRowId = selectedRow?.id;
+  const selectedRowVersion = selectedRow?.version;
+
   const toggleArchive = () => {
     const selectedRows = table.getFilteredSelectedRowModel().rows;
 
@@ -148,16 +153,17 @@ export default function DataTable<TData, TValue>({
     });
   };
 
-  const selectedRow = table.getFilteredSelectedRowModel().rows[0]
-    ?.original as qr_code;
-
-  const selectedRowId = selectedRow?.id;
-
   return (
     <div>
       <div className="flex gap-2">
         {table.getFilteredSelectedRowModel().rows.length === 1 ? (
-          <Link href={`/QRCode/${selectedRowId}`}>
+          <Link
+            href={
+              pathname.includes('QRCodeLogs')
+                ? `/QRCodeLogs/${selectedRowId}/${selectedRowVersion}`
+                : `/QRCode/${selectedRowId}`
+            }
+          >
             <Button
               className={`
               bg-velgreen
@@ -217,7 +223,7 @@ export default function DataTable<TData, TValue>({
                     disabled:opacity-50
                     `}
                   >
-                    Edit
+                    {pathname.includes('QRCodeLogs') ? 'Revert' : 'Edit'}
                   </DialogTrigger>
                   <DialogContent>
                     <DialogHeader>
@@ -228,11 +234,15 @@ export default function DataTable<TData, TValue>({
                             font-bold
                             `}
                         >
-                          Edit QR Code
+                          {pathname.includes('QRCodeLogs')
+                            ? 'Revert QR Code'
+                            : 'Edit'}
                         </span>
                       </DialogTitle>
                       <DialogDescription>
-                        This form will allow you to edit the QR code.
+                        {pathname.includes('QRCodeLogs')
+                          ? 'Revert the QR Code to a previous state.'
+                          : 'Edit the QR Code.'}
                       </DialogDescription>
                     </DialogHeader>
                     <ScrollArea className={``}>
@@ -244,16 +254,18 @@ export default function DataTable<TData, TValue>({
                     </ScrollArea>
                   </DialogContent>
                 </Dialog>
-                <Link href={`/QRCodeLogs/${selectedRowId}`}>
-                  <Button
-                    className={`
+                {!pathname.includes('QRCodeLogs') ? (
+                  <Link href={`/QRCodeLogs/${selectedRowId}`}>
+                    <Button
+                      className={`
                     bg-vellink
                     hover:bg-vellightlink
                   `}
-                  >
-                    View Logs
-                  </Button>
-                </Link>
+                    >
+                      View Logs
+                    </Button>
+                  </Link>
+                ) : null}
               </>
             ) : (
               <>
@@ -264,34 +276,39 @@ export default function DataTable<TData, TValue>({
                   hover:bg-vellightblue
                   `}
                 >
-                  Edit
+                  {pathname.includes('QRCodeLogs') ? 'Revert' : 'Edit'}
                 </Button>
-                <Button
-                  disabled
-                  className={`
+                {!pathname.includes('QRCodeLogs') ? (
+                  <Button
+                    disabled
+                    className={`
                   bg-vellink
                   hover:bg-vellightlink
                   `}
-                >
-                  View Logs
-                </Button>
+                  >
+                    View Logs
+                  </Button>
+                ) : null}
               </>
             )}
           </>
         ) : null}
 
-        {user && isWriter ? (
+        {user && isWriter && !pathname.includes('QRCodeLogs') ? (
           <>
-            <Button
-              className={`
-                bg-velorange
-                hover:bg-vellightorange
-              `}
-              onClick={toggleArchive}
-              disabled={!table.getFilteredSelectedRowModel().rows.length}
-            >
-              {pathname === '/Archive' ? 'Unarchive' : 'Archive'}
-            </Button>
+            {/* Only show the archive / unarchive button if not on the Inactive path */}
+            {!pathname.includes('Inactive') ? (
+              <Button
+                className={`
+            bg-velorange
+            hover:bg-vellightorange
+            `}
+                onClick={toggleArchive}
+                disabled={!table.getFilteredSelectedRowModel().rows.length}
+              >
+                {pathname === '/Archive' ? 'Unarchive' : 'Archive'}
+              </Button>
+            ) : null}
 
             {pathname === '/' || pathname === '/Archive' ? (
               <AlertDialog>
@@ -503,6 +520,26 @@ export default function DataTable<TData, TValue>({
           />
         </QRCodeTableFilterInputContainer>
 
+        {pathname.includes('QRCodeLogs') ? (
+          <QRCodeTableFilterInputContainer
+            labelTitle="Filter Versions"
+            labelFor="filter-qr-code-versions"
+          >
+            <Input
+              id="filter-qr-code-versions"
+              name="filter-qr-code-versions"
+              placeholder="Filter Versions..."
+              value={
+                (table.getColumn('version')?.getFilterValue() as string) ?? ''
+              }
+              onChange={event =>
+                table.getColumn('version')?.setFilterValue(event.target.value)
+              }
+              className="max-w-sm"
+            />
+          </QRCodeTableFilterInputContainer>
+        ) : null}
+
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
             <div
@@ -546,7 +583,9 @@ export default function DataTable<TData, TValue>({
                           ? 'Created At'
                           : column.id === 'updatedAt'
                             ? 'Updated At'
-                            : column.id}
+                            : column.id === 'qr_code_svg'
+                              ? 'QR Code'
+                              : column.id}
                   </DropdownMenuCheckboxItem>
                 );
               })}

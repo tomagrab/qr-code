@@ -79,11 +79,11 @@ export default function QRCodeDetailsHeader({
       <div
         className={`
           flex
-          w-full
           flex-row
           items-center
           justify-evenly
-          `}
+          gap-2
+        `}
       >
         <p
           className={`

@@ -142,6 +142,8 @@ export const UpdateQRCode = async (
     }
   }
 
+  console.log('id', id, 'youtube_title', youtube_title, 'values', values);
+
   // Proceed to update the QR Code if neither URL exists already
   const updatedQRCode = await updateQRCode(id, youtube_title, values);
 

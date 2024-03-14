@@ -21,6 +21,7 @@ import { Textarea } from '@/components/ui/textarea';
 import { Dispatch, SetStateAction, useState } from 'react';
 import { CreateQRCode, UpdateQRCode } from '@/actions/QRCodes/QRCodesActions';
 import { Switch } from '@/components/ui/switch';
+import { usePathname } from 'next/navigation';
 
 type QRCodeFormProps = {
   qr_code?: qr_code;
@@ -33,6 +34,7 @@ export default function QRCodeForm({
   isOpen,
   setIsOpen,
 }: QRCodeFormProps) {
+  const pathname = usePathname();
   const [loading, setLoading] = useState(false);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
   const [isUrlInUse, setIsUrlInUse] = useState(false);
@@ -251,13 +253,17 @@ export default function QRCodeForm({
           )}
         />
         <Button disabled={loading} type="submit">
-          {qr_code && loading
-            ? 'Updating...'
-            : qr_code
-              ? 'Update'
+          {qr_code && loading && pathname.includes('QRCodeLogs')
+            ? 'Reverting...'
+            : qr_code && loading
+              ? 'Updating...'
               : loading
                 ? 'Creating...'
-                : 'Create'}
+                : qr_code && pathname.includes('QRCodeLogs')
+                  ? 'Revert'
+                  : qr_code
+                    ? 'Update'
+                    : 'Create'}
         </Button>
 
         {errorMessage ? (

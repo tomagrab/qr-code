@@ -1,7 +1,9 @@
+'use client';
 import QRCodeDialog from '@/components/QRCodes/QRCodeDialog/QRCodeDialog';
 import { Button } from '@/components/ui/button';
 import { qr_code } from '@prisma/client';
 import Link from 'next/link';
+import { usePathname } from 'next/navigation';
 
 type QRCodeDetailsDescriptionProps = {
   qr_code: qr_code;
@@ -12,6 +14,7 @@ export default function QRCodeDetailsDescription({
   isWriter,
   qr_code,
 }: QRCodeDetailsDescriptionProps) {
+  const pathname = usePathname();
   return (
     <div
       className={`
@@ -38,23 +41,31 @@ export default function QRCodeDetailsDescription({
           `}
         >
           <QRCodeDialog
-            title="Edit"
-            subtitle="Edit QR Code"
-            description="
-          This form will allow you to edit the selected QR code
-          "
+            title={pathname.includes('QRCodeLogs') ? 'Revert' : 'Edit'}
+            subtitle={
+              pathname.includes('QRCodeLogs')
+                ? `Revert this QR code to version # ${qr_code.version}`
+                : 'Edit this QR code'
+            }
+            description={
+              pathname.includes('QRCodeLogs')
+                ? `Are you sure you want to revert this QR code to version # ${qr_code.version}?`
+                : 'Edit this QR code'
+            }
             qr_code={qr_code}
           />
-          <Link href={`/QRCodeLogs/${qr_code.id}`}>
-            <Button
-              className={`
+          {pathname.includes('QRCodeLogs') ? null : (
+            <Link href={`/QRCodeLogs/${qr_code.id}`}>
+              <Button
+                className={`
               bg-velblue
               hover:bg-vellightblue
             `}
-            >
-              View Logs
-            </Button>
-          </Link>
+              >
+                View Logs
+              </Button>
+            </Link>
+          )}
         </div>
       ) : null}
     </div>

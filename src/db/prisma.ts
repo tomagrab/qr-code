@@ -180,6 +180,28 @@ export const updateQRCode = async (
   values: z.infer<typeof QRCodeFormSchema>,
 ) => {
   try {
+    const user = await currentUser();
+
+    if (!user) {
+      throw new Error('User not found');
+    }
+
+    const userFullName = user.firstName + ' ' + user.lastName;
+    const userEmail = user.emailAddresses[0].emailAddress;
+
+    // Get the current QR code record
+    const currentQRCode = await readQRCode(id);
+
+    if (!currentQRCode) {
+      throw new Error('QR code not found');
+    }
+
+    // Get the version number of the current QR code record
+    const currentVersion = currentQRCode?.version;
+
+    // Generate a new version number for the updated QR code record
+    const newVersion = currentVersion + 1;
+
     // Update the QR code with the new values and add a record to the QR code log
     const qr_code = await prisma.qr_code.update({
       where: {
@@ -191,6 +213,8 @@ export const updateQRCode = async (
         active: values.active,
         archived: values.archived,
         youtube_title: youtube_title,
+        version: newVersion,
+        author: userFullName || userEmail,
         youtube_url: values.youtube_url,
         pdf_url: values.pdf_url,
       },
@@ -286,6 +310,10 @@ export const toggleActiveQRCode = async (id: number) => {
         youtube_url: active
           ? 'https://www.velocitor-qr-code.com/'
           : qr_code.youtube_url,
+        youtube_title: active ? 'No Title found' : qr_code.youtube_title,
+        pdf_url: active
+          ? 'https://www.velocitor-qr-code.com/'
+          : qr_code.pdf_url,
       },
     });
 
@@ -317,30 +345,26 @@ export const deleteQRCode = async (id: number) => {
 
 export const createQRCodeLog = async (qr_code_id: number) => {
   try {
-    // Retrieve the latest version number for the given qr_code_id
-    const latestLogEntry = await prisma.qr_code_log.findFirst({
-      where: { qr_code_id },
-      orderBy: { version: 'desc' }, // Order by version in descending order to get the latest
-    });
+    // Get a QR Code to copy into the new log entry
+    const qr_code = await readQRCode(qr_code_id);
 
-    // If a log entry exists, increment the version by 1. Otherwise, start with version 1.
-    const newVersionNumber = latestLogEntry ? latestLogEntry.version + 1 : 1;
+    if (!qr_code) {
+      throw new Error('QR code not found');
+    }
 
     // Create a new qr_code_log entry with the incremented version number
     const qr_code_log = await prisma.qr_code_log.create({
       data: {
         qr_code_id: qr_code_id,
-        version: newVersionNumber,
-        title: latestLogEntry?.title ?? 'QR Code Log',
-        description: latestLogEntry?.description ?? 'QR Code Log',
-        active: latestLogEntry?.active ?? true,
-        archived: latestLogEntry?.archived ?? false,
-        youtube_title: latestLogEntry?.youtube_title ?? 'QR Code Log',
-        youtube_url: latestLogEntry?.youtube_url ?? 'QR Code Log',
-        pdf_url: latestLogEntry?.pdf_url ?? 'QR Code Log',
-        createdAt: latestLogEntry?.createdAt ?? new Date(),
-        updatedAt: latestLogEntry?.updatedAt ?? new Date(),
-        author: latestLogEntry?.author ?? 'QR Code Log',
+        title: qr_code.title,
+        description: qr_code.description,
+        active: qr_code.active,
+        archived: qr_code.archived,
+        youtube_title: qr_code.youtube_title,
+        version: qr_code.version,
+        author: qr_code.author,
+        youtube_url: qr_code.youtube_url,
+        pdf_url: qr_code.pdf_url,
       },
     });
 
@@ -398,9 +422,31 @@ export const readQRCodeLogsByQRCode = async (qr_code_id: number) => {
       where: {
         qr_code_id,
       },
+      orderBy: {
+        createdAt: 'desc',
+      },
     });
 
     return qr_code_logs;
+  } catch (error) {
+    console.error(error);
+    return null;
+  }
+};
+
+export const readQRCodeLogsByQRCodeAndVersion = async (
+  qr_code_id: number,
+  version: number,
+) => {
+  try {
+    const qr_code_log = await prisma.qr_code_log.findFirst({
+      where: {
+        qr_code_id,
+        version,
+      },
+    });
+
+    return qr_code_log;
   } catch (error) {
     console.error(error);
     return null;
