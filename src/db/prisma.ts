@@ -88,6 +88,80 @@ export const readQRCode = async (id: number) => {
   }
 };
 
+export const readQRCodesCount = async () => {
+  try {
+    const qr_codes_count = await prisma.qr_code.count();
+
+    if (!qr_codes_count) {
+      throw new Error('QR codes not found');
+    }
+
+    return qr_codes_count;
+  } catch (error) {
+    console.error(error);
+    return null;
+  }
+};
+
+export const readActiveQRCodesCount = async () => {
+  try {
+    const qr_codes_count = await prisma.qr_code.count({
+      where: {
+        active: true,
+        archived: false,
+      },
+    });
+
+    if (!qr_codes_count) {
+      throw new Error('QR codes not found');
+    }
+
+    return qr_codes_count;
+  } catch (error) {
+    console.error(error);
+    return null;
+  }
+};
+
+export const readInactiveQRCodesCount = async () => {
+  try {
+    const qr_codes_count = await prisma.qr_code.count({
+      where: {
+        active: false,
+      },
+    });
+
+    if (!qr_codes_count) {
+      throw new Error('QR codes not found');
+    }
+
+    return qr_codes_count;
+  } catch (error) {
+    console.error(error);
+    return null;
+  }
+};
+
+export const readArchivedQRCodesCount = async () => {
+  try {
+    const qr_codes_count = await prisma.qr_code.count({
+      where: {
+        active: true,
+        archived: true,
+      },
+    });
+
+    if (!qr_codes_count) {
+      throw new Error('QR codes not found');
+    }
+
+    return qr_codes_count;
+  } catch (error) {
+    console.error(error);
+    return null;
+  }
+};
+
 export const readQRCodes = async () => {
   try {
     const qr_codes = await prisma.qr_code.findMany({

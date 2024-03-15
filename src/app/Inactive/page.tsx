@@ -1,8 +1,12 @@
 import { qr_code_columns } from '@/components/QRCodes/QRCodesTable/qr_code_columns';
 import DataTable from '@/components/ui/data-table';
-import { readInactiveQRCodes } from '@/db/prisma';
+import { readInactiveQRCodes, readInactiveQRCodesCount } from '@/db/prisma';
 import { currentUser } from '@clerk/nextjs/server';
 import { redirect } from 'next/navigation';
+
+type InactiveHeaderProps = {
+  inactive_qr_codes_count: number;
+};
 
 export default async function Inactive() {
   const inactive_qr_codes = await readInactiveQRCodes();
@@ -12,6 +16,8 @@ export default async function Inactive() {
     userEmail === process.env.NEXT_PUBLIC_WRITER_EMAIL_1 ||
     userEmail === process.env.NEXT_PUBLIC_WRITER_EMAIL_2;
 
+  const inactive_qr_codes_count = (await readInactiveQRCodesCount()) ?? 0;
+
   if (!user || !isWriter) {
     redirect('/');
   }
@@ -19,7 +25,7 @@ export default async function Inactive() {
   if (!inactive_qr_codes || inactive_qr_codes.length === 0) {
     return (
       <main>
-        <InactiveHeader />
+        <InactiveHeader inactive_qr_codes_count={inactive_qr_codes_count} />
         <div
           className={`
             flex
@@ -46,7 +52,7 @@ export default async function Inactive() {
 
   return (
     <main>
-      <InactiveHeader />
+      <InactiveHeader inactive_qr_codes_count={inactive_qr_codes_count} />
       {inactive_qr_codes && inactive_qr_codes.length > 0 ? (
         <DataTable columns={qr_code_columns} data={inactive_qr_codes} />
       ) : (
@@ -75,7 +81,7 @@ export default async function Inactive() {
   );
 }
 
-const InactiveHeader = () => {
+const InactiveHeader = ({ inactive_qr_codes_count }: InactiveHeaderProps) => {
   return (
     <div
       className={`
@@ -93,7 +99,7 @@ const InactiveHeader = () => {
             font-bold
           `}
       >
-        Inactive QR Codes
+        Inactive QR Codes - {inactive_qr_codes_count}
       </h2>
     </div>
   );

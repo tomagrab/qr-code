@@ -4,6 +4,7 @@ import DataTable from '@/components/ui/data-table';
 import { currentUser } from '@clerk/nextjs/server';
 import { SignedIn } from '@clerk/nextjs';
 import QRCodeDialog from '@/components/QRCodes/QRCodeDialog/QRCodeDialog';
+import { readQRCodesCount } from '@/db/prisma';
 
 type QRCodesDisplayProps = {
   qr_codes?: qr_code[] | null;
@@ -14,6 +15,7 @@ export default async function QRCodesDisplay({
 }: QRCodesDisplayProps) {
   const user = await currentUser();
   const userEmail = user?.emailAddresses[0].emailAddress;
+  const qr_codes_count = await readQRCodesCount();
   return (
     <div
       className={`
@@ -37,7 +39,7 @@ export default async function QRCodesDisplay({
             font-bold
           `}
         >
-          QR Codes
+          QR Codes - {qr_codes_count}
         </h2>
         <SignedIn>
           {user &&

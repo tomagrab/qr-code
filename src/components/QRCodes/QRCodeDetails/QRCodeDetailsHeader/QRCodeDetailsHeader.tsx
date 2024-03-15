@@ -59,6 +59,7 @@ export default function QRCodeDetailsHeader({
         >
           <h2
             className={`
+              max-w-md
               text-center
               text-xl
               font-bold
