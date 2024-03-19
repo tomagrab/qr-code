@@ -14,14 +14,14 @@ import {
 import { Input } from '@/components/ui/input';
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
 import { qr_code } from '@prisma/client';
-import { set, z } from 'zod';
+import { z } from 'zod';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useForm } from 'react-hook-form';
-import { Textarea } from '@/components/ui/textarea';
 import { Dispatch, SetStateAction, useState } from 'react';
 import { CreateQRCode, UpdateQRCode } from '@/actions/QRCodes/QRCodesActions';
 import { Switch } from '@/components/ui/switch';
 import { usePathname } from 'next/navigation';
+import TipTap from '@/components/ui/tip-tap';
 
 type QRCodeFormProps = {
   qr_code?: qr_code;
@@ -38,16 +38,6 @@ export default function QRCodeForm({
   const [loading, setLoading] = useState(false);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
   const [isUrlInUse, setIsUrlInUse] = useState(false);
-  const [description, setDescription] = useState(qr_code?.description || '');
-  const [descriptionCount, setDescriptionCount] = useState(
-    qr_code?.description?.length || 0,
-  );
-  const handleDescriptionChange = (
-    e: React.ChangeEvent<HTMLTextAreaElement>,
-  ) => {
-    setDescription(e.target.value);
-    setDescriptionCount(e.target.value.length);
-  };
 
   const form = useForm<z.infer<typeof QRCodeFormSchema>>({
     resolver: zodResolver(QRCodeFormSchema),
@@ -196,23 +186,15 @@ export default function QRCodeForm({
             <FormItem>
               <FormLabel>Description</FormLabel>
               <FormControl>
-                <Textarea
-                  {...field}
+                <TipTap
+                  limit={500}
+                  loading={loading}
+                  content={field.value}
                   onChange={e => {
                     field.onChange(e);
-                    handleDescriptionChange(e);
                   }}
-                  disabled={loading}
-                  placeholder="QR Code Description..."
                 />
               </FormControl>
-              <FormDescription>
-                {descriptionCount > 500 ? (
-                  <span className="text-red-500">Description too long</span>
-                ) : (
-                  <span>{descriptionCount} / 500 characters</span>
-                )}
-              </FormDescription>
               <FormMessage />
             </FormItem>
           )}

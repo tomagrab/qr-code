@@ -90,7 +90,12 @@ export const readQRCode = async (id: number) => {
 
 export const readQRCodesCount = async () => {
   try {
-    const qr_codes_count = await prisma.qr_code.count();
+    const qr_codes_count = await prisma.qr_code.count({
+      where: {
+        active: true,
+        archived: false,
+      },
+    });
 
     if (!qr_codes_count) {
       throw new Error('QR codes not found');

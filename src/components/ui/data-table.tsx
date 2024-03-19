@@ -107,10 +107,9 @@ export default function DataTable<TData, TValue>({
     ?.original as qr_code;
   const selectedRowId = selectedRow?.id;
   const selectedRowVersion = selectedRow?.version;
+  const selectedRows = table.getFilteredSelectedRowModel().rows;
 
   const toggleArchive = () => {
-    const selectedRows = table.getFilteredSelectedRowModel().rows;
-
     // Iterate through the selected rows and archive them
     selectedRows.forEach(async row => {
       const qr_code = row.original as qr_code;
@@ -124,8 +123,6 @@ export default function DataTable<TData, TValue>({
   };
 
   const toggleActive = () => {
-    const selectedRows = table.getFilteredSelectedRowModel().rows;
-
     // Iterate through the selected rows and archive them
     selectedRows.forEach(async row => {
       const qr_code = row.original as qr_code;
@@ -139,8 +136,6 @@ export default function DataTable<TData, TValue>({
   };
 
   const deleteSelected = () => {
-    const selectedRows = table.getFilteredSelectedRowModel().rows;
-
     // Iterate through the selected rows and delete them
     selectedRows.forEach(async row => {
       const qr_code = row.original as qr_code;
@@ -156,7 +151,7 @@ export default function DataTable<TData, TValue>({
   return (
     <div>
       <div className="flex gap-2">
-        {table.getFilteredSelectedRowModel().rows.length === 1 ? (
+        {selectedRows.length === 1 ? (
           <Link
             href={
               pathname.includes('QRCodeLogs')
@@ -186,7 +181,7 @@ export default function DataTable<TData, TValue>({
         )}
         {user && isWriter ? (
           <>
-            {table.getFilteredSelectedRowModel().rows.length === 1 ? (
+            {selectedRows.length === 1 ? (
               <>
                 {!pathname.includes('Archive') ? (
                   <Dialog
@@ -309,7 +304,7 @@ export default function DataTable<TData, TValue>({
             hover:bg-vellightorange
             `}
                 onClick={toggleArchive}
-                disabled={!table.getFilteredSelectedRowModel().rows.length}
+                disabled={!selectedRows.length}
               >
                 {pathname === '/Archive' ? 'Unarchive' : 'Archive'}
               </Button>
@@ -318,10 +313,7 @@ export default function DataTable<TData, TValue>({
             {pathname === '/' || pathname === '/Archive' ? (
               <AlertDialog>
                 <AlertDialogTrigger asChild>
-                  <Button
-                    variant="default"
-                    disabled={!table.getFilteredSelectedRowModel().rows.length}
-                  >
+                  <Button variant="default" disabled={!selectedRows.length}>
                     {pathname === '/' || pathname === '/Archive'
                       ? 'Deactivate'
                       : 'Activate'}
@@ -330,7 +322,7 @@ export default function DataTable<TData, TValue>({
                 <AlertDialogContent>
                   <AlertDialogHeader>
                     <AlertDialogTitle>
-                      {table.getFilteredSelectedRowModel().rows.length > 1
+                      {selectedRows.length > 1
                         ? 'Are you sure you want to deactivate these QR Codes?'
                         : 'Are you sure you want to deactivate this QR Code?'}
                     </AlertDialogTitle>
@@ -343,9 +335,7 @@ export default function DataTable<TData, TValue>({
                     <AlertDialogCancel>Cancel</AlertDialogCancel>
                     <AlertDialogAction
                       onClick={toggleActive}
-                      disabled={
-                        !table.getFilteredSelectedRowModel().rows.length
-                      }
+                      disabled={!selectedRows.length}
                       className={`
                         bg-velorange 
                         hover:bg-vellightorange
@@ -360,7 +350,7 @@ export default function DataTable<TData, TValue>({
               <Button
                 variant={`default`}
                 onClick={toggleActive}
-                disabled={!table.getFilteredSelectedRowModel().rows.length}
+                disabled={!selectedRows.length}
               >
                 {pathname === '/Inactive' ? 'Activate' : 'Deactivate'}
               </Button>
@@ -369,17 +359,14 @@ export default function DataTable<TData, TValue>({
             {pathname === '/Archive' || pathname === '/Inactive' ? (
               <AlertDialog>
                 <AlertDialogTrigger asChild>
-                  <Button
-                    variant="destructive"
-                    disabled={!table.getFilteredSelectedRowModel().rows.length}
-                  >
+                  <Button variant="destructive" disabled={!selectedRows.length}>
                     Delete
                   </Button>
                 </AlertDialogTrigger>
                 <AlertDialogContent>
                   <AlertDialogHeader>
                     <AlertDialogTitle>
-                      {table.getFilteredSelectedRowModel().rows.length > 1
+                      {selectedRows.length > 1
                         ? 'Are you sure you want to delete these QR Codes?'
                         : 'Are you sure you want to delete this QR Code?'}
                     </AlertDialogTitle>
@@ -392,9 +379,7 @@ export default function DataTable<TData, TValue>({
                     <AlertDialogCancel>Cancel</AlertDialogCancel>
                     <AlertDialogAction
                       onClick={deleteSelected}
-                      disabled={
-                        !table.getFilteredSelectedRowModel().rows.length
-                      }
+                      disabled={!selectedRows.length}
                       className="bg-red-500 hover:bg-red-400"
                     >
                       Delete
@@ -662,7 +647,7 @@ export default function DataTable<TData, TValue>({
         `}
       >
         <div className="flex-1 text-sm text-muted-foreground">
-          {table.getFilteredSelectedRowModel().rows.length} of{` `}
+          {selectedRows.length} of{` `}
           {table.getFilteredRowModel().rows.length}
           {table.getFilteredRowModel().rows.length <= 1 ? ' row' : ' rows'}
           {` `}

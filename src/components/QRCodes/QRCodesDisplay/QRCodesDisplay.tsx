@@ -15,7 +15,7 @@ export default async function QRCodesDisplay({
 }: QRCodesDisplayProps) {
   const user = await currentUser();
   const userEmail = user?.emailAddresses[0].emailAddress;
-  const qr_codes_count = await readQRCodesCount();
+  const qr_codes_count = (await readQRCodesCount()) ?? 0;
   return (
     <div
       className={`

@@ -24,14 +24,15 @@ export default function QRCodeDetailsDescription({
           gap-4
         `}
     >
-      <p
-        className={`
-            max-w-md
-            text-lg
+      {qr_code.description ? (
+        <p
+          className={`
+        max-w-md
+        text-lg
         `}
-      >
-        {qr_code.description}
-      </p>
+          dangerouslySetInnerHTML={{ __html: qr_code.description }}
+        />
+      ) : null}
       {isWriter ? (
         <div
           className={`
